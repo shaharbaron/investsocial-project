@@ -1,106 +1,100 @@
 import React from 'react';
-import { StyleSheet, Image , View, Text, TextInput, TouchableOpacity, handleLogin} from 'react-native';
+import { StyleSheet, Image , SafeAreaView, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+import colors from '../config/colors';
 
 function Login(props) {
     return (
-    <View style= {styles.container}>
+    <SafeAreaView style= {styles.container}>
         <Image style={styles.blackup} source={require("../assets/images/blackup.jpg")}/>
         <Image style={styles.logoup} source={require("../assets/images/logoup.png")}/>
         <Text style={styles.headerText1}>Log in to your account</Text>
         <Text style={styles.headerText2}>Welcome back! please enter your details.</Text>
         <Text style={styles.email}>Email</Text>
-        <TextInput style={styles.inputemail}></TextInput>
+        <TextInput style={styles.input}></TextInput>
         <Text style={styles.password}>Password</Text>
-        <TextInput style={styles.inputpassword}></TextInput>
+        <TextInput style={styles.input}></TextInput>
         <TouchableOpacity style={styles.loginbutton} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log in</Text>
+        <Text style={styles.buttonlog}>Log in</Text>
         </TouchableOpacity>
         <Text style={styles.buttonText1}>Don't hava an account?</Text>
         <TouchableOpacity style={styles.signupbutton} onPress={handleLogin}>
         <Text style={styles.buttonText2}>Sign up</Text>
         </TouchableOpacity>
-    </View>    
+    </SafeAreaView>    
     );
-}
+} 
 
 const styles= StyleSheet.create({
     container: { 
         flex: 1,
         alignItems: 'center',
     },
-    blackup: {
-        width: 500,
-        height: 140,
+    blackup: {// the black background upside
+        flexBasis: 100,
+        height: 120,
         position: "absolute",
     },
-    logoup: {
+    logoup: {// the logo - investsocial
+        marginTop: Platform.OS ==="android" ? 30 : -5 ,
+        flexBasis:65,
         width: '90%',
-        height: 65,
-        marginTop: 35,
-        resizeMode: 'stretch'
+        resizeMode: 'stretch',
     },
-    headerText1: {
+    headerText1: {// log in to your account
         marginTop: 60,
-        fontSize: 24,
+        fontSize: 25,
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    headerText2: {
+    headerText2: {// welcome back....
         fontSize: 19,
         marginBottom: 10,
     },
-    email: {
+    email: {// the email text
         marginTop: 50,
         marginLeft: -280,
         fontWeight: 'bold',
         fontSize: 25,
         marginBottom: 10,
     },
-    inputemail: {
+    input: {// all the text input 
         marginLeft: -42,
         height: 40,
         width: '80%',
         borderWidth: 1,
         padding: 10,
-        textAlign: 10,
+        borderRadius:4,
     },
-    password: {
+    password: {// the password text
         marginTop: 50,
         marginLeft: -228,
         fontWeight: 'bold',
         fontSize: 25,
         marginBottom: 10,
     },
-    inputpassword: {
-        marginLeft: -42,
-        height: 40,
-        width: '80%',
-        borderWidth: 1,
-        padding: 10,
-        textAlign: 10,
-    },
-    loginbutton: {
+    loginbutton: {// button login
         marginTop: 50,
-        height: 40,
+        height: Platform.OS ==="android" ? 44 : 40 ,
         width: '20%',
         borderWidth: 1,
         padding: 10,
+        borderRadius:10,
     },
-    buttonText: {
+    buttonlog: {// text login on button
         fontWeight: 'bold',
         fontSize: 15,
-        textAlign: 'center',
+        textAlign: "center",
     },
-    buttonText1: {
+    buttonText1: {// dont have an acount 
         marginTop: 20,
         fontSize: 20,
-        textAlign: 'center',
+        textAlign: "center",
     },
-    buttonText2: {
+    buttonText2: {// sign up
         marginTop: 20,
         fontSize: 20,
         fontWeight: 'bold',
-        textAlign: 'center',
+        textAlign: "center",
     },
 
 });
