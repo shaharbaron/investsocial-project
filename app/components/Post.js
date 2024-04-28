@@ -1,17 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, View, Image, Text} from 'react-native';
 
-function post(props) {
+import colors from "../config/colors";
+
+function Post(title ,image) {
     return (
-        <view style= {styles.post}>
-
-        </view>
+        <View style={styles.post}>
+            <Image style={styles.image} source={image} />
+            <Text style={styles.title}>{title}</Text> 
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     post : {
-        
-    }
+        borderRadius: 15,
+        backgroundColor: colors.white,
+        marginBottom: 20,
+        overflow: "hidden",
+    },
+    image: {
+        width: "100%",
+        height: 200,
+    },
+    title: {
+        marginBottom: 7,
+    },
 })
-export default post;
+export default Post;
