@@ -9,8 +9,8 @@ export default function App() {
     return (
       //<Login />
       //<Signup />
-      <Home />
-      //<Explore />
+      //<Home />
+      <Explore />
       //<Create />
       //<Profile />
   );

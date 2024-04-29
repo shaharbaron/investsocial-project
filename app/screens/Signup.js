@@ -1,12 +1,15 @@
 import React from 'react';
-import { StyleSheet, Image , SafeAreaView, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+
+import LogoUp from '../components/LogoUp';
 import colors from '../config/colors';
 
 function Signup(props){
     return(
-    <SafeAreaView style= {styles.container}>
-        <Image style={styles.blackup} source={require("../assets/images/blackup.jpg")}/>
-        <Image style={styles.logoup} source={require("../assets/images/logoup.png")}/>
+    <View style= {styles.container}>
+        <LogoUp
+            background={require("../assets/images/blackup.jpg")}
+            logo= {require("../assets/images/logoup.png")} />
         <Text style={styles.headerText1}>Create new account</Text>
         <Text style={styles.headerText2}>To use InvestSocial, please enter your details.</Text>
         <Text style={styles.textname}>Name</Text>
@@ -24,7 +27,7 @@ function Signup(props){
         <TouchableOpacity style={styles.signupbutton} onPress={handleLogin}>
         <Text style={styles.buttonText2}>Log in</Text>
         </TouchableOpacity>
-    </SafeAreaView>    
+    </View>    
     );
 }
 
@@ -32,17 +35,6 @@ const styles= StyleSheet.create({
     container: { 
         flex: 1,
         alignItems: 'center',
-    },
-    blackup: {// the black background upside
-        flexBasis: 100,
-        height: 120,
-        position: "absolute",
-    },
-    logoup: {// the logo - investsocial
-        marginTop: Platform.OS ==="android" ? 30 : -5 ,
-        flexBasis:65,
-        width: '90%',
-        resizeMode: 'stretch',
     },
     headerText1: {// creat new account
         marginTop: Platform.OS ==="android" ? 30 : 60 ,

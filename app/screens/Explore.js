@@ -1,18 +1,24 @@
 import React from 'react';
-import { StyleSheet, Image , SafeAreaView, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
-import colors from '../config/colors';
+import { StyleSheet, View, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+import LogoUp from '../components/LogoUp';
+import DownLine from '../components/DownLine';
+import AppText from '../components/AppText';
 
 function Explore(props) {
     return (
-        <SafeAreaView style= {styles.container}>
-            <Image style={styles.blackup} source={require("../assets/images/blackup.jpg")}/>
-            <Image style={styles.logoup} source={require("../assets/images/logoup.png")}/>
-            <Text style={styles.textbottom}>Home
-            <Text style={styles.textbottom}>  Explore
-            <Text style={styles.textbottom}>  Create
-            <Text style={styles.textbottom}>  Profile
-            </Text></Text></Text></Text>
-        </SafeAreaView>  
+        <View style= {styles.container}>
+            <LogoUp
+            background={require("../assets/images/blackup.jpg")}
+            logo= {require("../assets/images/logoup.png")} />
+            <AppText
+            apptext = {"Search UserName"} />
+            <TextInput style={styles.inputuser}></TextInput>
+            <DownLine
+            Home={"Home"}
+            Create={"Create"}
+            Explore={"Explore"}
+            Profile={"Profile"}/>
+        </View>  
     );
 }
 
@@ -21,22 +27,14 @@ const styles= StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    blackup: {// the black background upside
-        flexBasis: 100,
-        height: 120,
-        position: "absolute",
+    inputuser: {// the search input 
+        marginTop: -510,
+        height: 40,
+        width: 300,
+        borderWidth: 1,
+        borderRadius:10,
     },
-    logoup: {// the logo - investsocial
-        marginTop: Platform.OS ==="android" ? 30 : -5 ,
-        flexBasis:65,
-        width: '90%',
-        resizeMode: 'stretch',
-    },
-    textbottom: {// the texts down
-        marginTop: Platform.OS ==="android" ? 580 : 610 ,
-        fontSize: 25,
-        fontWeight: 'bold',
-    },
+    
 });
 
 export default Explore;
