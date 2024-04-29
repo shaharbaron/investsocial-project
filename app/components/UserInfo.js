@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import {StyleSheet, View, Platform, Image, Text} from 'react-native';
 
 function UserInfo({imagepro, username, time}) {
     return (
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         width: "8%",
         height: 25,
         resizeMode: 'stretch',
+        borderRadius: 20,
     },
     username: { // the name of the user
         fontSize: 17,
