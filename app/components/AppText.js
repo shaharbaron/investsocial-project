@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Platform, Text} from 'react-native';
+import colors from '../config/colors';
 
 function AppText({apptext}) {
     return (
@@ -7,7 +8,8 @@ function AppText({apptext}) {
     );
 }
 const styles= StyleSheet.create({
-    apptext: {// the settings of the text
+    
+apptext: {// the settings of the text
         marginTop: Platform.OS ==="android" ? 20 : 40 ,
         fontSize: 25,
         fontWeight: 'bold',

@@ -3,8 +3,9 @@ import {StyleSheet, View, Image, Text,Platform } from 'react-native';
 
 import colors from "../config/colors";
 import UserInfo from './UserInfo';
+import LikeButton from './LikeButton';
 
-function Postuser({imagepro, username, time, image , title}) {
+function Postuser({imagepro, username, time, title, image}) {
     return (
         <View style={styles.post}>
             <UserInfo style={styles.userinfo}
@@ -13,15 +14,16 @@ function Postuser({imagepro, username, time, image , title}) {
             time={time}/>
             <Text style={styles.title}>{title}</Text> 
             <Image style={styles.image} source={image}></Image>
-            
+            <LikeButton/>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    post : { // all the template
+    post : { // the template of the post
         borderRadius: 15,
-        //איך מוסיפים מסגרת בצבע לכל תבנית פוסט
+        borderWidth: 0.7,
+        borderColor: colors.gray,
         backgroundColor: colors.white,
         padding:6,
         marginTop: Platform.OS ==="android" ? 30 : 30 ,
@@ -31,7 +33,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 7,
     },
-    image: { // the image the user ass to the post
+    image: { // the image the user add to the post
         width: "100%",
         height: 150,
         resizeMode: 'stretch',

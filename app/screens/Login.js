@@ -1,26 +1,25 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 
 import LogoUp from '../components/LogoUp';
 import colors from '../config/colors';
+import AppTextInput from '../components/AppTextInput';
 
-function Login(props) {
+function Login({navigation}) {
     return (
     <View style= {styles.container}>
-        <LogoUp
-            background={require("../assets/images/blackup.jpg")}
-            logo= {require("../assets/images/logoup.png")} />
+        <LogoUp/>
         <Text style={styles.headerText1}>Log in to your account</Text>
         <Text style={styles.headerText2}>Welcome back! please enter your details.</Text>
         <Text style={styles.email}>Email</Text>
-        <TextInput style={styles.input}></TextInput>
+        <AppTextInput placeholder={"Enter your username"}></AppTextInput>
         <Text style={styles.password}>Password</Text>
-        <TextInput style={styles.input}></TextInput>
-        <TouchableOpacity style={styles.loginbutton} onPress={handleLogin}>
+        <AppTextInput placeholder={"Enter your password"}></AppTextInput>
+        <TouchableOpacity style={styles.loginbutton} onPress={() => navigation.navigate('Home')}>
         <Text style={styles.buttonlog}>Log in</Text>
         </TouchableOpacity>
         <Text style={styles.buttonText1}>Don't hava an account?</Text>
-        <TouchableOpacity style={styles.signupbutton} onPress={handleLogin}>
+        <TouchableOpacity style={styles.signupbutton} onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.buttonText2}>Sign up</Text>
         </TouchableOpacity>
     </View>    
@@ -44,27 +43,18 @@ const styles= StyleSheet.create({
     },
     email: {// the email text
         marginTop: 50,
-        marginLeft: -280,
+        marginLeft: Platform.OS ==="android" ? -285 : -280 ,
         fontWeight: 'bold',
         fontSize: 25,
-        marginBottom: 10,
-    },
-    input: {// all the text input 
-        marginLeft: -42,
-        height: 40,
-        width: '80%',
-        borderWidth: 1,
-        padding: 10,
-        borderRadius:4,
     },
     password: {// the password text
         marginTop: 50,
-        marginLeft: -228,
+        marginLeft: Platform.OS ==="android" ? -235 : -228 ,
         fontWeight: 'bold',
         fontSize: 25,
-        marginBottom: 10,
     },
     loginbutton: {// button login
+        backgroundColor: colors.lightgray,
         marginTop: 50,
         height: Platform.OS ==="android" ? 44 : 40 ,
         width: '20%',

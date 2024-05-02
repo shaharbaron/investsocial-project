@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View, Image, Platform} from 'react-native';
 
-function LogoUp({background, logo}) {
+function LogoUp(props) {
     return (
         <View>
-            <Image style={styles.background} source={background}/>
-            <Image style={styles.logo} source={logo}/>
+            <Image style={styles.background} source={require("../assets/images/blackup.jpg")}/>
+            <Image style={styles.logo} source={require("../assets/images/logoup.png")}/>
         </View>
     );
 }
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         flexBasis: 100,
         height: Platform.OS ==="android" ? 100 : 120 ,
         position: "absolute",
+
     },
     logo: {
         marginTop: Platform.OS ==="android" ? 25 : 40 ,

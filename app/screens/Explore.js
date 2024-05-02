@@ -1,24 +1,28 @@
 import React from 'react';
-import { StyleSheet, View, TextInput} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import LogoUp from '../components/LogoUp';
-import DownLine from '../components/DownLine';
-import AppText from '../components/AppText';
+// import DownLine from '../components/DownLine';
+import AppButton from '../components/AppButton';
+import AppTextInput from '../components/AppTextInput';
+import { AntDesign } from '@expo/vector-icons';
+import colors from '../config/colors';
 
-function Explore(props) {
+function Explore({navigation}) {
     return (
         <View style= {styles.container}>
-            <LogoUp
-            background={require("../assets/images/blackup.jpg")}
-            logo= {require("../assets/images/logoup.png")} />
-            <AppText
-            apptext = {"Search UserName"} />
-            <TextInput style={styles.inputuser}>
-            </TextInput>
-            <DownLine
-            Home={"Home"}
-            Create={"Create"}
-            Explore={"Explore"}
-            Profile={"Profile"}/>
+            <LogoUp/>
+            <View style={styles.space}/>
+            <AppTextInput placeholder={"Search username"}/>
+            <TouchableOpacity>
+            <AntDesign style={styles.iconsearch} name="search1" size={24} color="black" />
+            </TouchableOpacity>
+            {/* <DownLine/> */}
+            <View style={styles.down}>
+            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}></AppButton>
+            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}></AppButton>
+            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}></AppButton>
+            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}></AppButton>
+            </View>
         </View>  
     );
 }
@@ -28,12 +32,20 @@ const styles= StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    inputuser: {// the search input 
-        marginTop: 10,
-        height: 40,
-        width: 300,
+    down: {
+        marginTop: 500,
+        flexDirection: 'row',
+    },
+    space:{
+        marginTop: 40,
+    },
+    iconsearch: {
+        backgroundColor: colors.white,
+        marginTop: -34,
+        marginLeft: 300,
+        borderRadius: 3,
         borderWidth: 1,
-        borderRadius:10,
+        borderColor: colors.black,
     },
 });
 

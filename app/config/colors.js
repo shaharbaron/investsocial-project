@@ -1,5 +1,8 @@
 export default {
-    primary: '#fc5c65',
-    secondry: '#4ecdc4',
+    gray: '#a9a9a9',
+    black: '#000000',
     white: '#fff',
+    lightgreen: '#8fbc8f',
+    lightgray: '#dcdcdc',
+    whitesmoke: '#f5f5f5',
 }

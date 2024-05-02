@@ -1,30 +1,29 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, handleLogin, Platform} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 
 import LogoUp from '../components/LogoUp';
+import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
 
-function Signup(props){
+function Signup({navigation}){
     return(
     <View style= {styles.container}>
-        <LogoUp
-            background={require("../assets/images/blackup.jpg")}
-            logo= {require("../assets/images/logoup.png")} />
+        <LogoUp/>
         <Text style={styles.headerText1}>Create new account</Text>
         <Text style={styles.headerText2}>To use InvestSocial, please enter your details.</Text>
         <Text style={styles.textname}>Name</Text>
-        <TextInput style={styles.input}></TextInput>
+        <AppTextInput placeholder={"Enter your name"}></AppTextInput>
         <Text style={styles.textuser}>Username</Text>
-        <TextInput style={styles.input}></TextInput>
+        <AppTextInput placeholder={"Enter your username"}></AppTextInput>
         <Text style={styles.textemail}>Email</Text>
-        <TextInput style={styles.input}></TextInput>
+        <AppTextInput placeholder={"Enter your email"}></AppTextInput>
         <Text style={styles.textpass}>Password</Text>
-        <TextInput style={styles.input}></TextInput>
-        <TouchableOpacity style={styles.signbutton} onPress={handleLogin}>
+        <AppTextInput placeholder={"Enter your password"}></AppTextInput>
+        <TouchableOpacity style={styles.signbutton} onPress={() => navigation.navigate('Home')}>
         <Text style={styles.buttonsign}>Sign up</Text>
         </TouchableOpacity>
         <Text style={styles.buttonText1}>Already have an account?</Text>
-        <TouchableOpacity style={styles.signupbutton} onPress={handleLogin}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText2}>Log in</Text>
         </TouchableOpacity>
     </View>    
@@ -35,6 +34,7 @@ const styles= StyleSheet.create({
     container: { 
         flex: 1,
         alignItems: 'center',
+        //justifyContent: 'center',
     },
     headerText1: {// creat new account
         marginTop: Platform.OS ==="android" ? 30 : 60 ,
@@ -44,42 +44,34 @@ const styles= StyleSheet.create({
     },
     headerText2: {// to use invest.....
         fontSize: 17,
-        marginBottom: 25,
     },
     textname: {// the name text
+        marginTop: 20,
+        marginLeft: -275,
+        fontWeight: 'bold',
+        fontSize: 25,
+    },
+    textuser: {// the user text
+        marginTop: 20,
+        marginLeft: -225,
+        fontWeight: 'bold',
+        fontSize: 25,
+        
+    },
+    textemail: {// the email text
+        marginTop: 20,
         marginLeft: -280,
         fontWeight: 'bold',
         fontSize: 25,
-        marginBottom: 10,
-    },
-    textuser: {// the user text
-        marginLeft: -228,
-        fontWeight: 'bold',
-        fontSize: 25,
-        marginBottom: 10,
-    },
-    textemail: {// the email text
-        marginLeft: -283,
-        fontWeight: 'bold',
-        fontSize: 25,
-        marginBottom: 10,
     },
     textpass: {// the pssword text
-        marginLeft: -233,
+        marginTop: 20,
+        marginLeft: -230,
         fontWeight: 'bold',
         fontSize: 25,
-        marginBottom: 10,
-    },
-    input: {// all the textinput 
-        marginLeft: Platform.OS ==="android" ? -35 : -46 ,
-        height: 40,
-        width: '80%',
-        borderWidth: 1,
-        padding: 10,
-        borderRadius:4,
-        marginBottom:8,
     },
     signbutton: {// button sign up
+        backgroundColor: colors.lightgray,
         marginTop: 30,
         height: 44,
         width: '23%',

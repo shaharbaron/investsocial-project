@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
-import colors from '../congif/colors'
 
 function AppButton({title, onPress}) {
     return (
@@ -9,20 +8,13 @@ function AppButton({title, onPress}) {
         </TouchableOpacity> 
     );
 }
+
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: colors.primary,
-        borderRadius: 25,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 15,
-        width: "100%",
-        marginVertical: 10,
+        marginTop: 10,
     },
     text: {
-        color: colors.white,
-        fontSize: 18,
-        textTransform: "uppercase",
+        fontSize: 22,
         fontWeight: 'bold',
     },
 

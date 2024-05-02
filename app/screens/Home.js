@@ -1,35 +1,62 @@
 import React from 'react';
-import {StyleSheet, View, Text, Platform} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import Postuser from "../components/Postuser";
 import LogoUp from '../components/LogoUp';
-import DownLine from '../components/DownLine';
+// import DownLine from '../components/DownLine';
+import AppButton from '../components/AppButton';
 
-function Home(props) {
+function Home({ navigation }) {
+    const posts = [
+        {
+            id: 1,
+            imagepro: require('../assets/images/profile1.jpg'),
+            username: "Shahar Baron",
+            time: "1h",
+            image: require('../assets/images/BABAdaily.png'),
+            title: "I think BABA stock will go up, look at its daily chart, it can now break the price it had as resistance and continue to climb upwards."
+        },
+        {
+            id: 2,
+            imagepro: require('../assets/images/profile2.jpg'),
+            username: "EmraldWizard",
+            time: "4h",
+            image: require('../assets/images/SOFIinfo.png'),
+            title: "$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments"
+        },
+        {
+            id: 3,
+            imagepro: require('../assets/images/profile2.jpg'),
+            username: "EmraldWizard",
+            time: "4h",
+            image: require('../assets/images/SOFIinfo.png'),
+            title: "$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments"
+        }
+    ];
+    const renderPost = ({ item }) => (
+        <Postuser
+            imagepro={item.imagepro}
+            username={item.username}
+            time={item.time}
+            image={item.image}
+            title={item.title}
+        />
+    );
+
     return (
-        <View style= {styles.container}>
-            <LogoUp
-            background={require("../assets/images/blackup.jpg")}
-            logo= {require("../assets/images/logoup.png")} />
-            <View>
-                <Postuser style={styles.post}
-                imagepro= {require('../assets/images/profile1.jpg')}
-                username= {"Shahar Baron"}
-                time= {"1h"}
-                image= {require('../assets/images/BABAdaily.png')}
-                title= {"I think BABA stock will go up, look at its daily chart, it can now break the price it had as resistance and continue to climb upwards."} />
-                <Postuser style={styles.post}
-                imagepro= {require('../assets/images/profile2.jpg')}
-                username= {"EmraldWizard"}
-                time= {"4h"}
-                image= {require('../assets/images/SOFIinfo.png')}
-                title= {"$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments"} />
+        <View style={styles.container}>
+            <LogoUp />
+            <FlatList
+                data={posts}
+                renderItem={renderPost}
+                keyExtractor={(item) => item.id.toString()} // the id of each post
+            />
+            <View style={styles.down}>
+                <AppButton title="Home    " onPress={() => navigation.navigate('Home')}></AppButton>
+                <AppButton title="Create    " onPress={() => navigation.navigate('Create')}></AppButton>
+                <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}></AppButton>
+                <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}></AppButton>
             </View>
-            <DownLine
-            Home={"Home"}
-            Create={"Create"}
-            Explore={"Explore"}
-            Profile={"Profile"}/>
-        </View>  
+        </View>
     );
 }
 
@@ -38,9 +65,9 @@ const styles= StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    post: {
-        width: '10%',
-        resizeMode: 'contain',
+    down: {
+        marginTop: 20,
+        flexDirection: 'row',
     },
 });
 export default Home;
