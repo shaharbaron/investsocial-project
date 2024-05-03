@@ -5,10 +5,10 @@ import AppButton from '../components/AppButton';
 function DownLine({navigation}) {
     return (
         <View style={styles.container}>
-            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}></AppButton>
-            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}></AppButton>
-            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}></AppButton>
-            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}></AppButton>
+            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}/>
+            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}/>
+            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}/>
+            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}/>
         </View>
     );
 }

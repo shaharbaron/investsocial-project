@@ -11,17 +11,15 @@ function LogoUp(props) {
 }
 const styles = StyleSheet.create({
     background: {
-        marginLeft: -200,
+        marginLeft: -20,
         width: 600,
         flexBasis: 100,
-        height: Platform.OS ==="android" ? 100 : 120 ,
-        position: "absolute",
-
+        height: Platform.OS ==="android" ? 100 : 120,
     },
     logo: {
-        marginTop: Platform.OS ==="android" ? 25 : 40 ,
+        marginTop: Platform.OS ==="android" ? 25 : -65 ,
+        marginLeft: 110,
         flexBasis:65,
-        resizeMode: 'stretch',
         width: 350,
     },
 })

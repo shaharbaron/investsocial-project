@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         borderColor: colors.gray,
         backgroundColor: colors.white,
         padding:6,
-        marginTop: Platform.OS ==="android" ? 30 : 30 ,
+        marginTop: Platform.OS ==="android" ? 30 : 10 ,
         overflow: "hidden",
     },
     title: { // the post the user write

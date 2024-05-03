@@ -25,11 +25,11 @@ function Home({ navigation }) {
         },
         {
             id: 3,
-            imagepro: require('../assets/images/profile2.jpg'),
-            username: "EmraldWizard",
-            time: "4h",
-            image: require('../assets/images/SOFIinfo.png'),
-            title: "$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments"
+            imagepro: require('../assets/images/profile3.jpg'),
+            username: "RaalaBabinian",
+            time: "7h",
+            image: require('../assets/images/applinfo.png'),
+            title: "Bought some apple calls before closing"
         }
     ];
     const renderPost = ({ item }) => (
@@ -51,10 +51,10 @@ function Home({ navigation }) {
                 keyExtractor={(item) => item.id.toString()} // the id of each post
             />
             <View style={styles.down}>
-                <AppButton title="Home    " onPress={() => navigation.navigate('Home')}></AppButton>
-                <AppButton title="Create    " onPress={() => navigation.navigate('Create')}></AppButton>
-                <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}></AppButton>
-                <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}></AppButton>
+            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}/>
+            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}/>
+            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}/>
+            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}/>
             </View>
         </View>
     );

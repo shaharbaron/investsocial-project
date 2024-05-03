@@ -18,10 +18,10 @@ function Explore({navigation}) {
             </TouchableOpacity>
             {/* <DownLine/> */}
             <View style={styles.down}>
-            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}></AppButton>
-            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}></AppButton>
-            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}></AppButton>
-            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}></AppButton>
+            <AppButton title="Home    " onPress={() => navigation.navigate('Home')}/>
+            <AppButton title="Create    " onPress={() => navigation.navigate('Create')}/>
+            <AppButton title="Explore    " onPress={() => navigation.navigate('Explore')}/>
+            <AppButton title="Profile    " onPress={() => navigation.navigate('Profile')}/>
             </View>
         </View>  
     );

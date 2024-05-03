@@ -18,10 +18,11 @@ function Login({navigation}) {
         <TouchableOpacity style={styles.loginbutton} onPress={() => navigation.navigate('Home')}>
         <Text style={styles.buttonlog}>Log in</Text>
         </TouchableOpacity>
+        <View style={{flexDirection: 'row', marginTop: 40}}>
         <Text style={styles.buttonText1}>Don't hava an account?</Text>
         <TouchableOpacity style={styles.signupbutton} onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.buttonText2}>Sign up</Text>
-        </TouchableOpacity>
+        </TouchableOpacity></View>
     </View>    
     );
 } 
@@ -68,16 +69,14 @@ const styles= StyleSheet.create({
         textAlign: "center",
     },
     buttonText1: {// dont have an acount 
-        marginTop: 20,
         fontSize: 20,
         textAlign: "center",
     },
     buttonText2: {// sign up
-        marginTop: 20,
+        marginLeft: 10,
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: "center",
     },
-
 });
 export default Login;
