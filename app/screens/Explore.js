@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import LogoUp from '../components/LogoUp';
-// import DownLine from '../components/DownLine';
 import AppButton from '../components/AppButton';
 import AppTextInput from '../components/AppTextInput';
 import { AntDesign } from '@expo/vector-icons';
@@ -37,12 +36,12 @@ const styles= StyleSheet.create({
         flexDirection: 'row',
     },
     space:{
-        marginTop: 40,
+        marginTop: Platform.OS ==="android" ? 0 : 8,
     },
     iconsearch: {
         backgroundColor: colors.white,
-        marginTop: -34,
-        marginLeft: 300,
+        marginTop: Platform.OS ==="android" ? -37 : -34,
+        marginLeft:  Platform.OS ==="android" ? 320 : 300,
         borderRadius: 3,
         borderWidth: 1,
         borderColor: colors.black,
