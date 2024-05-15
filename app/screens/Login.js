@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-
 import LogoUp from "../components/LogoUp";
 import colors from "../config/colors";
 import AppTextInput from "../components/AppTextInput";
-import { loginWithEmailAndPassword } from "../firebase";
+import { loginWithEmailAndPassword } from "../firebase.js";
 
 function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -23,13 +22,12 @@ function Login({ navigation }) {
         navigation.navigate("Home");
       } else {
         navigation.navigate("Home");
-        alert("Invalid email or password. Please try again");
+        //alert("Invalid email or password. Please try again");
       }
-
       console.log(result);
     } catch (error) {
       navigation.navigate("Home");
-      alert("Invalid email or password. Please try again");
+      //alert("Invalid email or password. Please try again");
     }
   };
   return (
@@ -73,7 +71,7 @@ function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: "center",
   },
   headerText1: {
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
   headerText2: {
     // welcome back....
     fontSize: 19,
-    marginBottom: 10,
+    marginBottom: 40,
   },
   textemail: {
     // the email text

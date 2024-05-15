@@ -32,27 +32,27 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Create"
           component={Create}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Explore"
           component={Explore}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Profile"
           component={Profile}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="SettingPro"
           component={SettingPro}
-          options={{ headerShown: false}}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

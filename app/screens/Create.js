@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,28 +6,68 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
-  handleLogin,
+  Image,
 } from "react-native";
 import LogoUp from "../components/LogoUp";
 import AppButton from "../components/AppButton";
 import colors from "../config/colors";
+import * as ImagePicker from "expo-image-picker";
 
 function Create({ navigation }) {
+  const [caption, setCaption] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleCaptionChange = (text) => {
+    setCaption(text);
+  };
+
+  const handleImagePicker = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const handlePostSubmit = () => {
+    // Handle post submission logic here
+    console.log("Caption:", caption);
+    console.log("Image URI:", image);
+  };
   return (
     <View style={styles.container}>
       <LogoUp />
       <Text style={styles.title}>Create new post</Text>
       <Text style={styles.caption}>Caption</Text>
-      <TextInput style={styles.input}></TextInput>
+      <TextInput
+        style={styles.input}
+        value={caption}
+        placeholder="Enter your post here"
+        onChangeText={handleCaptionChange}
+        multiline
+      />
       <Text style={styles.addphoto}>Add photo</Text>
-      {/* <TextInput style={styles.input}>             SVG, PNG, JPG, GIF, JPEG </TextInput> */}
       <Text style={styles.upload}>
         SUPPORT THIS: SVG, PNG, JPG, GIF, JPEG TYPES{" "}
       </Text>
-      <TouchableOpacity style={styles.uploadbutton} onPress={handleLogin}>
+      <TouchableOpacity style={styles.uploadbutton} onPress={handleImagePicker}>
         <Text style={styles.buttonpost}>Upload</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.postbutton} onPress={handleLogin}>
+      {image && (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      )}
+      <TouchableOpacity style={styles.postbutton} onPress={handlePostSubmit}>
         <Text style={styles.buttonpost}>Post</Text>
       </TouchableOpacity>
       {/* <DownLine/> */}

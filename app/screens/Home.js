@@ -1,8 +1,9 @@
 import React from "react";
-import { FlatList, StyleSheet, View, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, View} from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
 import AppButton from "../components/AppButton";
+//import DownLine from "../components/DownLine";
 
 function Home({ navigation }) {
   const posts = [
@@ -50,6 +51,7 @@ function Home({ navigation }) {
         renderItem={renderPost}
         keyExtractor={(item) => item.id.toString()} // the id of each post
       />
+      {/* <DownLine/> */}
       <View style={styles.down}>
         <AppButton
           title="Home    "

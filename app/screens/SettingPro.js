@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View} from "react-native";
+import { StyleSheet, View } from "react-native";
 import LogoUp from "../components/LogoUp";
 
 function SettingPro({ navigation }) {

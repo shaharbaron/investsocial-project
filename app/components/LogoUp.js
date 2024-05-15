@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     flexBasis: Platform.OS === "android" ? 85 : 95,
   },
   logo: {
-    marginTop: Platform.OS === "android" ? -65 : -64,
+    marginTop: Platform.OS === "android" ? -65 : -65,
     marginLeft: 56,
     flexBasis: 65,
     width: 350,

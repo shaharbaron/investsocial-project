@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import LogoUp from "../components/LogoUp";
 import AppButton from "../components/AppButton";
 import { Feather } from "@expo/vector-icons";
+import ProfileInfo from "../components/ProfileInfo";
 
 function Profile({ navigation }) {
   return (
@@ -19,6 +20,7 @@ function Profile({ navigation }) {
           <Feather name="settings" size={24} color="black" />
         </TouchableOpacity>
       </View>
+      <ProfileInfo />
       {/* <DownLine/> */}
       <View style={styles.down}>
         <AppButton
