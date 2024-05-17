@@ -1,12 +1,11 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View, Platform } from "react-native";
 import LogoUp from "../components/LogoUp";
-import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../config/colors";
 
-function Explore({ navigation }) {
+function Explore(props) {
   return (
     <View style={styles.container}>
       <LogoUp />
@@ -20,25 +19,6 @@ function Explore({ navigation }) {
           color="black"
         />
       </TouchableOpacity>
-      {/* <DownLine/> */}
-      <View style={styles.down}>
-        <AppButton
-          title="Home    "
-          onPress={() => navigation.navigate("Home")}
-        />
-        <AppButton
-          title="Create    "
-          onPress={() => navigation.navigate("Create")}
-        />
-        <AppButton
-          title="Explore    "
-          onPress={() => navigation.navigate("Explore")}
-        />
-        <AppButton
-          title="Profile    "
-          onPress={() => navigation.navigate("Profile")}
-        />
-      </View>
     </View>
   );
 }
@@ -47,10 +27,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  down: {
-    marginTop: 500,
-    flexDirection: "row",
   },
   space: {
     marginTop: Platform.OS === "android" ? 0 : 8,

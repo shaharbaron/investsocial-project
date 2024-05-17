@@ -29,6 +29,8 @@ function Login({ navigation }) {
       navigation.navigate("Home");
       //alert("Invalid email or password. Please try again");
     }
+    setEmail("");
+    setPassword("");
   };
   return (
     <View style={styles.container}>

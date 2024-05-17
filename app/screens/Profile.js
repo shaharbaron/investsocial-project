@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import LogoUp from "../components/LogoUp";
-import AppButton from "../components/AppButton";
 import { Feather } from "@expo/vector-icons";
 import ProfileInfo from "../components/ProfileInfo";
 
@@ -21,25 +20,6 @@ function Profile({ navigation }) {
         </TouchableOpacity>
       </View>
       <ProfileInfo />
-      {/* <DownLine/> */}
-      <View style={styles.down}>
-        <AppButton
-          title="Home    "
-          onPress={() => navigation.navigate("Home")}
-        />
-        <AppButton
-          title="Create    "
-          onPress={() => navigation.navigate("Create")}
-        />
-        <AppButton
-          title="Explore    "
-          onPress={() => navigation.navigate("Explore")}
-        />
-        <AppButton
-          title="Profile    "
-          onPress={() => navigation.navigate("Profile")}
-        />
-      </View>
     </View>
   );
 }
@@ -51,10 +31,6 @@ const styles = StyleSheet.create({
   },
   setting: {
     marginLeft: 300,
-  },
-  down: {
-    marginTop: 550,
-    flexDirection: "row",
   },
 });
 

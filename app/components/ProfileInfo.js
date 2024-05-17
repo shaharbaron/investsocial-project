@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, onSnapshot } from "firebase/firestore";
-import FastImage from "react-native-fast-image";
 
 const ProfileInfo = () => {
   const [userData, setUserData] = useState(null);
@@ -51,12 +50,11 @@ const ProfileInfo = () => {
   }
 
   return (
-    // { uri: userData.profileImageUrl }
     <View style={styles.container}>
       {userData?.profileImageUrl ? (
         <Image
           style={styles.profile}
-          source={require("../assets/images/profile1.jpg")}
+          source={{ uri: userData.profileImageUrl }}
         />
       ) : (
         <Image

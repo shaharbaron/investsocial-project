@@ -1,31 +1,29 @@
 import React from "react";
-import { StyleSheet, View, Image, Platform } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
+import { Header } from "react-native-elements";
 
 function LogoUp(props) {
   return (
     <View>
-      <Image
-        style={styles.black}
-        source={require("../assets/images/blackup.jpg")}
-      />
-      <Image
-        style={styles.logo}
-        source={require("../assets/images/logoup.png")}
+      <Header
+        backgroundColor="#000000"
+        rightComponent={
+          <Image
+            source={require("../assets/images/logoup.png")}
+            style={styles.logo}
+          />
+        }
+        containerStyle={styles.headerContainer}
       />
     </View>
   );
 }
 const styles = StyleSheet.create({
-  black: {
-    marginLeft: -20,
-    width: 500,
-    flexBasis: Platform.OS === "android" ? 85 : 95,
-  },
   logo: {
-    marginTop: Platform.OS === "android" ? -65 : -65,
-    marginLeft: 56,
-    flexBasis: 65,
-    width: 350,
+    // the logo
+    marginTop: -20,
+    width: 363,
+    height: 70,
   },
 });
 export default LogoUp;

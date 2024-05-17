@@ -53,6 +53,11 @@ function Signup({ navigation }) {
       console.log("Error signing up:", error);
       alert("An error occurred while signing up. Please try again.");
     }
+    setName(""); // reset all the info
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setSelectedImage(null);
   };
   const saveUserData = async (userId, fullName, username, profileImageUrl) => {
     try {

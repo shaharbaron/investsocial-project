@@ -1,12 +1,10 @@
-import React from "react";
-import { FlatList, StyleSheet, View} from "react-native";
+import React, { useState, useEffect } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
-import AppButton from "../components/AppButton";
-//import DownLine from "../components/DownLine";
 
-function Home({ navigation }) {
-  const posts = [
+function Home({ route }) {
+  const [posts, setPosts] = useState([
     {
       id: 1,
       imagepro: require("../assets/images/profile1.jpg"),
@@ -33,7 +31,22 @@ function Home({ navigation }) {
       image: require("../assets/images/applinfo.png"),
       title: "Bought some apple calls before closing",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (route.params?.caption && route.params?.image) {
+      const newPost = {
+        id: Date.now(),
+        imagepro: require("../assets/images/profile1.jpg"), // Replace with the actual user's profile image
+        username: "Current User", // Replace with the actual username
+        time: "now",
+        image: { uri: route.params.image },
+        title: route.params.caption,
+      };
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
+    }
+  }, [route.params]);
+
   const renderPost = ({ item }) => (
     <Postuser
       imagepro={item.imagepro}
@@ -51,25 +64,6 @@ function Home({ navigation }) {
         renderItem={renderPost}
         keyExtractor={(item) => item.id.toString()} // the id of each post
       />
-      {/* <DownLine/> */}
-      <View style={styles.down}>
-        <AppButton
-          title="Home    "
-          onPress={() => navigation.navigate("Home")}
-        />
-        <AppButton
-          title="Create    "
-          onPress={() => navigation.navigate("Create")}
-        />
-        <AppButton
-          title="Explore    "
-          onPress={() => navigation.navigate("Explore")}
-        />
-        <AppButton
-          title="Profile    "
-          onPress={() => navigation.navigate("Profile")}
-        />
-      </View>
     </View>
   );
 }
@@ -78,10 +72,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  down: {
-    marginTop: 10,
-    flexDirection: "row",
   },
 });
 export default Home;
