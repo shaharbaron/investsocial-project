@@ -23,7 +23,7 @@ function SettingPro({ navigation }) {
       </View>
       <Image
         style={styles.profile}
-        source={require("../assets/images/profile.png")}
+        source={require("../assets/images/profile2.jpg")}
       />
       <View style={{ flexDirection: "row", marginTop: 40, marginBottom: 30 }}>
         <Text style={{ fontSize: 25, marginRight: 195 }}>Username</Text>
@@ -31,6 +31,7 @@ function SettingPro({ navigation }) {
           <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
         </TouchableOpacity>
       </View>
+      <Text style= {styles.username}>Your current username is: Shaharb</Text>
       <AppTextInput placeholder={"Change username"} />
       <TouchableOpacity style={styles.savebutton}>
         <Text style={{ fontSize: 15 }}>Save</Text>
@@ -60,6 +61,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 15,
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: "500",
+    marginRight: 59,
+    marginBottom: 10,
   },
 });
 

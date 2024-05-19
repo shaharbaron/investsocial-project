@@ -21,13 +21,11 @@ function Login({ navigation }) {
       if (result.user.uid) {
         navigation.navigate("Home");
       } else {
-        navigation.navigate("Home");
-        //alert("Invalid email or password. Please try again");
+        alert("Invalid email or password. Please try again");
       }
       console.log(result);
     } catch (error) {
-      navigation.navigate("Home");
-      //alert("Invalid email or password. Please try again");
+      alert("Invalid email or password. Please try again");
     }
     setEmail("");
     setPassword("");

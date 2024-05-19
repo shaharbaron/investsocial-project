@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const ProfileInfo = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -19,11 +21,19 @@ const ProfileInfo = () => {
 
       const unsubscribe = onSnapshot(
         userDocRef,
-        (snapshot) => {
+        async (snapshot) => {
           if (snapshot.exists()) {
             const userData = snapshot.data();
             setUserData(userData);
             console.log(userData);
+            try {
+              const storage = getStorage();
+              const imageRef = ref(storage, userData.profileImageUrl);
+              const url = await getDownloadURL(imageRef);
+              setImageUrl(url);
+            } catch (error) {
+              console.log("Error getting image URL:", error);
+            }
             setLoading(false);
           } else {
             setError(new Error("User data not found"));
@@ -51,11 +61,8 @@ const ProfileInfo = () => {
 
   return (
     <View style={styles.container}>
-      {userData?.profileImageUrl ? (
-        <Image
-          style={styles.profile}
-          source={{ uri: userData.profileImageUrl }}
-        />
+      {imageUrl ? (
+        <Image style={styles.profile} source={{ uri: imageUrl }} />
       ) : (
         <Image
           style={styles.profile}

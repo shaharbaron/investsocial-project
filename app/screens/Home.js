@@ -7,7 +7,7 @@ function Home({ route }) {
   const [posts, setPosts] = useState([
     {
       id: 1,
-      imagepro: require("../assets/images/profile1.jpg"),
+      imagepro: require("../assets/images/profile2.jpg"),
       username: "Shahar Baron",
       time: "1h",
       image: require("../assets/images/BABAdaily.png"),
@@ -16,7 +16,7 @@ function Home({ route }) {
     },
     {
       id: 2,
-      imagepro: require("../assets/images/profile2.jpg"),
+      imagepro: require("../assets/images/profile1.jpg"),
       username: "EmraldWizard",
       time: "4h",
       image: require("../assets/images/SOFIinfo.png"),

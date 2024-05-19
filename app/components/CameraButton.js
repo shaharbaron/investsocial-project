@@ -14,7 +14,8 @@ function CameraButton({ onImageSelected, selectedImage }) {
     });
 
     if (!result.canceled) {
-      onImageSelected(result.uri);
+      const selectedAsset = result.assets[0];
+      onImageSelected(selectedAsset.uri);
     }
   };
 
@@ -26,7 +27,8 @@ function CameraButton({ onImageSelected, selectedImage }) {
     });
 
     if (!result.canceled) {
-      onImageSelected(result.uri);
+      const selectedAsset = result.assets[0];
+      onImageSelected(selectedAsset.uri);
     }
   };
 

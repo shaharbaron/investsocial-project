@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
+    // the button of upload/post
     backgroundColor: colors.lightgray,
     marginTop: 10,
     height: Platform.OS === "android" ? 44 : 40,
