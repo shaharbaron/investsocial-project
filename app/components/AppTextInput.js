@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Platform, View } from "react-native";
+import { StyleSheet, TextInput, Platform } from "react-native";
 import colors from "../config/colors";
 
 const AppTextInput = ({ placeholder, style, ...otherProps }) => {

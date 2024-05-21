@@ -1,39 +1,42 @@
-import React, {useState} from "react";
-import { StyleSheet, TouchableOpacity, View, Platform, FlatList} from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Platform,
+  FlatList,
+} from "react-native";
 import LogoUp from "../components/LogoUp";
 import AppTextInput from "../components/AppTextInput";
 import { AntDesign } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import colors from "../config/colors";
+import { getAllPosts } from "../firebase";
+import { useFocusEffect } from "@react-navigation/native";
 
 function Explore(props) {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      imagepro: require("../assets/images/profile1.jpg"),
-      username: "EmraldWizard",
-      time: "1h",
-      image: require("../assets/images/BABAdaily.png"),
-      title:
-        "I think BABA stock will go up, look at its daily chart, it can now break the price it had as resistance and continue to climb upwards.",
-    },
-    {
-      id: 2,
-      imagepro: require("../assets/images/profile1.jpg"),
-      username: "EmraldWizard",
-      time: "4h",
-      image: require("../assets/images/SOFIinfo.png"),
-      title:
-        "$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments",
-    },
-  ]);
+  // all goes to database /posts
+  const [posts, setPosts] = useState([]);
+  const getPosts = async () => {
+    const posts = await getAllPosts();
+    if (posts.length > 0) {
+      setPosts([...posts]);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getPosts();
+    }, [])
+  );
+
   const renderPost = ({ item }) => (
     <Postuser
-      imagepro={item.imagepro}
-      username={item.username}
-      time={item.time}
-      image={item.image}
+      //imagepro={item.imageURL}
+      email={item.email}
+      time={"1h"}
       title={item.title}
+      image={item.imageURL}
     />
   );
   return (
@@ -49,11 +52,14 @@ function Explore(props) {
           color="black"
         />
       </TouchableOpacity>
-      <FlatList
-        data={posts}
-        renderItem={renderPost}
-        keyExtractor={(item) => item.id.toString()} // the id of each post
-      />
+      {posts.length ? (
+        <FlatList
+          style={{ width: 350 }}
+          data={posts}
+          renderItem={renderPost}
+          keyExtractor={(item, index) => index} // the id of each post
+        />
+      ) : null}
     </View>
   );
 }

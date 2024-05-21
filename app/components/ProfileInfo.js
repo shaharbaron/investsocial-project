@@ -5,17 +5,15 @@ import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const ProfileInfo = () => {
+  // the info in up of profile screen , the hello and profile picture
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
-    const firestore = getFirestore();
     const user = auth.currentUser;
 
     if (user) {
+      const firestore = getFirestore();
       const userId = user.uid;
       const userDocRef = doc(firestore, "users", userId);
 
@@ -25,39 +23,37 @@ const ProfileInfo = () => {
           if (snapshot.exists()) {
             const userData = snapshot.data();
             setUserData(userData);
-            console.log(userData);
-            try {
-              const storage = getStorage();
-              const imageRef = ref(storage, userData.profileImageUrl);
-              const url = await getDownloadURL(imageRef);
-              setImageUrl(url);
-            } catch (error) {
-              console.log("Error getting image URL:", error);
-            }
-            setLoading(false);
           } else {
             setError(new Error("User data not found"));
-            setLoading(false);
           }
         },
         (error) => {
           setError(error);
-          setLoading(false);
         }
       );
       return () => unsubscribe();
-    } else {
-      setLoading(false);
     }
   }, []);
 
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
+  const [error, setError] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  if (error) {
-    return <Text>Error: {error.message}</Text>;
-  }
+  useEffect(() => {
+    async (snapshot) => {
+      try {
+        const storage = getStorage();
+        const imageRef = ref(storage, userData.profileImageUrl);
+        const url = await getDownloadURL(imageRef);
+        console.log("Profileinfo: the url is", url);
+        setImageUrl(url);
+      } catch (error) {
+        console.log("Error getting image URL:", error);
+      }
+    },
+      (error) => {
+        setError(error);
+      };
+  }, []);
 
   return (
     <View style={styles.container}>

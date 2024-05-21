@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,8 +10,29 @@ import {
 import LogoUp from "../components/LogoUp";
 import colors from "../config/colors";
 import AppTextInput from "../components/AppTextInput";
+import {
+  getCurrentUserProfileImage,
+  getCurrentUserUsername,
+} from "../firebase";
 
 function SettingPro({ navigation }) {
+  const [profileImageURL, setProfileImageURL] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      const imageBlob = await getCurrentUserProfileImage();
+      console.log("SettingPro - the profile image is: ", imageBlob);
+      if (imageBlob) {
+        const imageURL = URL.createObjectURL(imageBlob);
+        setProfileImageURL(imageURL);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
+
+  const username = getCurrentUserUsername();
+
   return (
     <View style={styles.container}>
       <LogoUp />
@@ -23,7 +44,11 @@ function SettingPro({ navigation }) {
       </View>
       <Image
         style={styles.profile}
-        source={require("../assets/images/profile2.jpg")}
+        source={
+          profileImageURL
+            ? { uri: profileImageURL }
+            : require("../assets/images/profile.png")
+        }
       />
       <View style={{ flexDirection: "row", marginTop: 40, marginBottom: 30 }}>
         <Text style={{ fontSize: 25, marginRight: 195 }}>Username</Text>
@@ -31,7 +56,7 @@ function SettingPro({ navigation }) {
           <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
         </TouchableOpacity>
       </View>
-      <Text style= {styles.username}>Your current username is: Shaharb</Text>
+      <Text style={styles.username}>Your current username is: {username} </Text>
       <AppTextInput placeholder={"Change username"} />
       <TouchableOpacity style={styles.savebutton}>
         <Text style={{ fontSize: 15 }}>Save</Text>

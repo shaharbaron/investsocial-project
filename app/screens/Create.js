@@ -13,11 +13,16 @@ import {
 import LogoUp from "../components/LogoUp";
 import colors from "../config/colors";
 import * as ImagePicker from "expo-image-picker";
+import { submitNewPost } from "../firebase";
+import { getAuth } from "firebase/auth";
 
 function Create({ navigation }) {
+  const auth = getAuth();
+  const current = auth.currentUser;
+  //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); //
 
   const handleCaptionChange = (text) => {
     setCaption(text);
@@ -38,27 +43,28 @@ function Create({ navigation }) {
     });
 
     if (!result.canceled) {
+      //console.log("Create -  the result.uri is: ", result.uri);
       setImage(result.uri);
     }
   };
 
   const handlePostSubmit = async () => {
-    // Pass the caption and image URI to the Home screen
+    // Pass the caption and image URI to the database Posts
     if (!caption.trim()) {
       alert("Please enter a caption before posting.");
       return;
     }
     setIsSubmitting(true);
-    const currentUser = {
-      username: "John Doe",
-      profileImage: require("../assets/images/profile1.jpg"),
-    };
 
-    await navigation.navigate("Home", { caption, image, currentUser });
+    //submitNewPost(email, caption, image)
+    submitNewPost(current.email, caption, image);
+    //navigation.navigate("Home");
+
     setIsSubmitting(false);
     setCaption("");
     setImage(null);
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

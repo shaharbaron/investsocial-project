@@ -1,45 +1,59 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import ProfileInfo from "../components/ProfileInfo";
+import { useFocusEffect } from "@react-navigation/native";
+import { getAuth, signOut } from "firebase/auth";
+import { getPostsByEmail } from "../firebase";
 
 function Profile({ navigation }) {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      imagepro: require("../assets/images/profile2.jpg"),
-      username: "Shaharb",
-      time: "1h",
-      image: require("../assets/images/BABAdaily.png"),
-      title:
-        "I think BABA stock will go up, look at its daily chart, it can now break the price it had as resistance and continue to climb upwards.",
-    },
-    {
-      id: 2,
-      imagepro: require("../assets/images/profile2.jpg"),
-      username: "Shaharb",
-      time: "4h",
-      image: require("../assets/images/SOFIinfo.png"),
-      title:
-        "$1M YOLO into SoFi (Earnings are on Monday in the pre-market) - Position details in the comments",
-    },
-  ]);
+  const auth = getAuth();
+  const current = auth.currentUser; // print the currentuser by the firebase - auth
+  console.log("Profile - the current user is:", current); // this 3 lines is to know who is the current
+  // all goes to database /posts
+  const [posts, setPosts] = useState([]);
+  const getPostsE = async () => {
+    const posts = await getPostsByEmail(current.email);
+    if (posts.length > 0) {
+      setPosts([...posts]);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getPostsE();
+    }, [])
+  );
+
   const renderPost = ({ item }) => (
     <Postuser
-      imagepro={item.imagepro}
-      username={item.username}
-      time={item.time}
-      image={item.image}
+      email={item.email}
+      time={"1h"}
       title={item.title}
+      image={item.imageURL}
     />
   );
+
+  const handleLogout = () => {
+    // logout the user from the application
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        // if there is error
+        console.error("Error logging out: ", error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <LogoUp />
       <View style={{ flexDirection: "row", marginTop: 5 }}>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity onPress={handleLogout}>
           <Feather name="log-out" size={24} color="black" />
         </TouchableOpacity>
         <TouchableOpacity
@@ -50,11 +64,14 @@ function Profile({ navigation }) {
         </TouchableOpacity>
       </View>
       <ProfileInfo />
-      <FlatList
-        data={posts}
-        renderItem={renderPost}
-        keyExtractor={(item) => item.id.toString()} // the id of each post
-      />
+      {posts.length ? (
+        <FlatList
+          style={{ width: 350 }}
+          data={posts}
+          renderItem={renderPost}
+          keyExtractor={(item, index) => index} // the id of each post
+        />
+      ) : null}
     </View>
   );
 }

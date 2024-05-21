@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, Platform, Image, Text } from "react-native";
 
 function UserInfo({ imagepro, username, time }) {
+  // profile picture, username , time of the post
+  useEffect(() => {
+    // console.log("Userinfo - imagepro", imagepro);
+    // console.log("Userinfo - username", username);
+    // console.log("Userinfo - time", time);
+  }, [imagepro]);
+
   return (
     <View>
-      <Image style={styles.imagepro} source={imagepro} />
+      <Image style={styles.imagepro} source={{ uri: imagepro }} />
       <Text style={styles.username}>{username}</Text>
       <Text style={styles.time}>{time}</Text>
     </View>
