@@ -16,27 +16,41 @@ import {
 } from "../firebase";
 
 function SettingPro({ navigation }) {
-  const [profileImageURL, setProfileImageURL] = useState(null);
+  const [Profilepic, setProfilepic] = useState(null);
+  async function fetchProfileImage() {
+    // this call the function that get the profile picture
+    const profileImageURL = await getCurrentUserProfileImage();
+    if (profileImageURL) {
+      setProfilepic(profileImageURL);
+      console.log("Current user's profile image URL:", profileImageURL);
+    } else {
+      console.log("No profile image found for the current user");
+    }
+  }
 
+  fetchProfileImage();
+
+  const [Username, setUsername] = useState(null);
   useEffect(() => {
-    const fetchProfileImage = async () => {
-      const imageBlob = await getCurrentUserProfileImage();
-      console.log("SettingPro - the profile image is: ", imageBlob);
-      if (imageBlob) {
-        const imageURL = URL.createObjectURL(imageBlob);
-        setProfileImageURL(imageURL);
+    // this call the function that get the username.
+    const fetchUsername = async () => {
+      try {
+        const username = await getCurrentUserUsername();
+        console.log("Profileinfo - the username is: ", username);
+        setUsername(username);
+      } catch (error) {
+        console.log("Error");
       }
     };
 
-    fetchProfileImage();
+    fetchUsername();
   }, []);
-
-  const username = getCurrentUserUsername();
 
   return (
     <View style={styles.container}>
       <LogoUp />
       <View style={{ flexDirection: "row", marginTop: 10, marginBottom: 30 }}>
+        
         <Text style={{ fontSize: 25, marginRight: 160 }}>Profile picture</Text>
         <TouchableOpacity style={styles.edit}>
           <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
@@ -45,8 +59,8 @@ function SettingPro({ navigation }) {
       <Image
         style={styles.profile}
         source={
-          profileImageURL
-            ? { uri: profileImageURL }
+          Profilepic
+            ? { uri: Profilepic }
             : require("../assets/images/profile.png")
         }
       />
@@ -56,7 +70,7 @@ function SettingPro({ navigation }) {
           <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.username}>Your current username is: {username} </Text>
+      <Text style={styles.username}>Your current username is: {Username} </Text>
       <AppTextInput placeholder={"Change username"} />
       <TouchableOpacity style={styles.savebutton}>
         <Text style={{ fontSize: 15 }}>Save</Text>

@@ -1,71 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { getAuth } from "firebase/auth";
-import { getFirestore, doc, onSnapshot } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import {
+  getCurrentUserUsername,
+  getCurrentUserProfileImage,
+} from "../firebase";
 
 const ProfileInfo = () => {
   // the info in up of profile screen , the hello and profile picture
-  const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (user) {
-      const firestore = getFirestore();
-      const userId = user.uid;
-      const userDocRef = doc(firestore, "users", userId);
-
-      const unsubscribe = onSnapshot(
-        userDocRef,
-        async (snapshot) => {
-          if (snapshot.exists()) {
-            const userData = snapshot.data();
-            setUserData(userData);
-          } else {
-            setError(new Error("User data not found"));
-          }
-        },
-        (error) => {
-          setError(error);
-        }
-      );
-      return () => unsubscribe();
+  const [Profilepic, setProfilepic] = useState(null);
+  async function fetchProfileImage() {
+    // this call the function that get the profile picture
+    const profileImageURL = await getCurrentUserProfileImage();
+    console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
+    if (profileImageURL) {
+      setProfilepic(profileImageURL);
+      console.log("Current user's profile image URL:", profileImageURL);
+    } else {
+      console.log("No profile image found for the current user");
     }
-  }, []);
+  }
 
-  const [error, setError] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+  fetchProfileImage();
 
+  const [Username, setUsername] = useState(null);
   useEffect(() => {
-    async (snapshot) => {
+    // this call the function that get the username.
+    const fetchUsername = async () => {
       try {
-        const storage = getStorage();
-        const imageRef = ref(storage, userData.profileImageUrl);
-        const url = await getDownloadURL(imageRef);
-        console.log("Profileinfo: the url is", url);
-        setImageUrl(url);
+        const username = await getCurrentUserUsername();
+        console.log("Profileinfo - the username is: ", username);
+        setUsername(username);
       } catch (error) {
-        console.log("Error getting image URL:", error);
+        console.log("Error");
       }
-    },
-      (error) => {
-        setError(error);
-      };
+    };
+
+    fetchUsername();
   }, []);
 
   return (
     <View style={styles.container}>
-      {imageUrl ? (
-        <Image style={styles.profile} source={{ uri: imageUrl }} />
+      {Profilepic ? (
+        <Image style={styles.profile} source={{ uri: Profilepic }} />
       ) : (
         <Image
           style={styles.profile}
-          source={require("../assets/images/profile.png")}
+          source={
+            "https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile.png?alt=media&token=0071e735-25e1-4c7f-a6f0-9d9e73391bad"
+          }
         />
       )}
-      <Text style={styles.username}>Hello {userData?.username}</Text>
+      {/* <Image source = {{"https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile.png?alt=media&token=0071e735-25e1-4c7f-a6f0-9d9e73391bad" || "https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile2.jpg?alt=media&token=eafa9a00-78c6-4777-b7e5-b78a20bb68c8"}} /> */}
+      <Text style={styles.username}>Hello {Username}</Text>
     </View>
   );
 };

@@ -30,7 +30,7 @@ function Profile({ navigation }) {
   const renderPost = ({ item }) => (
     <Postuser
       email={item.email}
-      time={"1h"}
+      time={item.time}
       title={item.title}
       image={item.imageURL}
     />

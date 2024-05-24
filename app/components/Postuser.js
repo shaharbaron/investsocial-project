@@ -1,29 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Text, Platform } from "react-native";
+import moment from "moment";
 import { getUserByEmail } from "../firebase";
-
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
 import LikeButton from "./LikeButton";
 
-function Postuser({ email, time, title, image }) {
-  console.log("Postuser - the image is: ", image);
+moment.locale("en");
+
+function Postuser({ email, createdAt, title, image }) {
+  // console.log("Postuser - the image is: ", image);
+  // console.log("Postuser - the title is: ", title);
+  // console.log("Postuser - the email is: ", email);
+
   const [userDetails, setUserDetails] = useState([]);
-
-  const getUserDetails = async () => {
-    const userDet = await getUserByEmail(email);
-    //console.log("Postuser -  the email is:", email);
-    //console.log("Postuser -  the userDet is:", userDet);
-    if (userDet) setUserDetails((userDetails) => userDet);
-  };
+  const [timeFromNow, setTimeFromNow] = useState("");
 
   useEffect(() => {
+    const getUserDetails = async () => {
+      try {
+        const userDet = await getUserByEmail(email);
+        console.log("PostUser - the userDet is:", userDet);
+        if (userDet) setUserDetails(userDet);
+      } catch (error) {
+        console.error("Error getting user details:", error);
+      }
+    };
+
     getUserDetails();
-  }, [email]);
 
-  useEffect(() => {
-    //console.log("Postuser - in useeffect 2 user details is: ", userDetails);
-  }, [userDetails]);
+    const updateTime = () => {
+      const timeFromNowUpdate = moment(createdAt).calendar(null, {
+        sameDay: "[Today]",
+        nextDay: "[Tomorrow]",
+        nextWeek: "dddd",
+        lastDay: "[Yesterday]",
+        lastWeek: "[Last] dddd",
+        sameElse: "DD/MM/YYYY",
+      });
+      setTimeFromNow(timeFromNowUpdate);
+    };
+
+    updateTime(); // Update immediately
+    const interval = setInterval(updateTime, 60000); // Update every minute
+
+    return () => {
+      clearInterval(interval); // Clean up the interval on component unmount
+    };
+  }, [email, createdAt]);
 
   return (
     <View style={styles.post}>
@@ -31,7 +55,7 @@ function Postuser({ email, time, title, image }) {
         style={styles.userinfo}
         imagepro={userDetails.profileImageUrl}
         username={userDetails.username}
-        time={time}
+        time={timeFromNow}
       />
       <Text style={styles.title}>{title}</Text>
       <Image style={styles.image} source={{ uri: image }} />

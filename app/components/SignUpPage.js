@@ -9,6 +9,10 @@ import {
 import AppTextInput from "../components/AppTextInput";
 import colors from "../config/colors";
 import CameraButton from "../components/CameraButton";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getProfileImageFromUser } from "../firebase";
 
 function SignUpPage({ navigation }) {
   // start with empty value, and changes when the user enter info
@@ -24,7 +28,7 @@ function SignUpPage({ navigation }) {
       return;
     }
     try {
-      const auth = FIREBASE_AUTH;
+      const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -32,17 +36,18 @@ function SignUpPage({ navigation }) {
       );
       const user = userCredential.user;
       console.log("User created:", user);
-
       let profileImageUrl = null;
+
       if (selectedImage) {
         // if choose image, we uploade to storage
         const storage = getStorage();
-        const storageRef = ref(storage, `profile-images/${user.uid}`);
+        const timestamp = Date.now(); // Get current timestamp
+        const storageRef = ref(storage, `profile-images/${timestamp}`);
         await uploadBytes(storageRef, selectedImage);
-        profileImageUrl = await getDownloadURL(storageRef); // we get the url image
+        profileImageUrl = await getDownloadURL(storageRef);
       }
-
-      await saveUserData(user.uid, email, name, username, profileImageUrl);
+      console.log("SignUp - here we ok2");
+      await saveUserData(user.uid, email, name, username, selectedImage);
       navigation.navigate("Home");
     } catch (error) {
       console.log("Error signing up:", error);

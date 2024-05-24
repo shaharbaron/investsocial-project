@@ -11,30 +11,39 @@ import AppTextInput from "../components/AppTextInput";
 import { AntDesign } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import colors from "../config/colors";
-import { getAllPosts } from "../firebase";
-import { useFocusEffect } from "@react-navigation/native";
+import { getPostsByEmail, getEmailByUsername } from "../firebase";
 
 function Explore(props) {
   // all goes to database /posts
   const [posts, setPosts] = useState([]);
-  const getPosts = async () => {
-    const posts = await getAllPosts();
-    if (posts.length > 0) {
-      setPosts([...posts]);
+  const [searchUsername, setSearchUsername] = useState("");
+
+  const handleSearch = async () => {
+    console.log(
+      "Explore - the username that the user search is:",
+      searchUsername
+    );
+    const email = await getEmailByUsername(searchUsername);
+    console.log("Explore - the email is: ", email);
+    if (email) {
+      const searchResults = await getPostsByEmail(email.toLowerCase());
+      setPosts(searchResults);
+    } else {
+      setPosts([]);
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getPosts();
-    }, [])
-  );
+  const handleUsernameChange = (text) => {
+    setSearchUsername(text);
+    if (text === "") {
+      setPosts([]);
+    }
+  };
 
   const renderPost = ({ item }) => (
     <Postuser
-      //imagepro={item.imageURL}
       email={item.email}
-      time={"1h"}
+      time={item.time}
       title={item.title}
       image={item.imageURL}
     />
@@ -43,8 +52,12 @@ function Explore(props) {
     <View style={styles.container}>
       <LogoUp />
       <View style={styles.space} />
-      <AppTextInput placeholder={"Search username"} />
-      <TouchableOpacity>
+      <AppTextInput
+        placeholder={"Search username"}
+        onChangeText={handleUsernameChange}
+        value={searchUsername}
+      />
+      <TouchableOpacity onPress={handleSearch}>
         <AntDesign
           style={styles.iconsearch}
           name="search1"

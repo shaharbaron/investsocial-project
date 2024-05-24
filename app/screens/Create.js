@@ -55,8 +55,6 @@ function Create({ navigation }) {
       return;
     }
     setIsSubmitting(true);
-
-    //submitNewPost(email, caption, image)
     submitNewPost(current.email, caption, image);
     //navigation.navigate("Home");
 

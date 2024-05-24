@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, RefreshControl  } from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
 import { getAllPosts } from "../firebase";
 import { useFocusEffect } from "@react-navigation/native";
 
-function Home({ route }) {
+function Home({ navigation }) {
   // all goes to database /posts
   const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getPosts = async () => {
-    const posts = await getAllPosts();
-    if (posts.length > 0) {
-      setPosts([...posts]);
+    setRefreshing(true);
+    try {
+      const postsData = await getAllPosts();
+      setPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
     }
+    setRefreshing(false);
   };
 
   useFocusEffect(
@@ -24,13 +29,16 @@ function Home({ route }) {
 
   const renderPost = ({ item }) => (
     <Postuser
-      //imagepro={item.imageURL}
       email={item.email}
-      time={"1h"}
+      time={item.time}
       title={item.title}
       image={item.imageURL}
     />
   );
+
+  const handleRefresh = () => {
+    getPosts();
+  };
 
   return (
     <View style={styles.container}>
@@ -40,7 +48,10 @@ function Home({ route }) {
           style={{ width: 350 }}
           data={posts}
           renderItem={renderPost}
-          keyExtractor={(item, index) => index} // the id of each post
+          keyExtractor={(item, index) => index.toString()} // the id of each post
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
         />
       ) : null}
     </View>
