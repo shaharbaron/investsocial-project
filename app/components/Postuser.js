@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Text, Platform } from "react-native";
 import moment from "moment";
+import { doc, onSnapshot } from "firebase/firestore";
+import { FIRESTORE_DB } from "../firebase";
 import { getUserByEmail } from "../firebase";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
-import LikeButton from "./LikeButton";
+import LikeButton from "./Icons/LikeButton";
 
 moment.locale("en");
 
@@ -18,13 +20,8 @@ function Postuser({ email, createdAt, title, image }) {
 
   useEffect(() => {
     const getUserDetails = async () => {
-      try {
-        const userDet = await getUserByEmail(email);
-        console.log("PostUser - the userDet is:", userDet);
-        if (userDet) setUserDetails(userDet);
-      } catch (error) {
-        console.error("Error getting user details:", error);
-      }
+      const userDet = await getUserByEmail(email);
+      if (userDet) setUserDetails(userDet);
     };
 
     getUserDetails();

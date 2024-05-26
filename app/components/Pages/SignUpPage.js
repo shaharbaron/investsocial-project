@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import AppTextInput from "../components/AppTextInput";
-import colors from "../config/colors";
-import CameraButton from "../components/CameraButton";
+import AppTextInput from "../AppTextInput";
+import colors from "../../config/colors";
+import CameraButton from "../CameraButton";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getProfileImageFromUser } from "../firebase";
 
 function SignUpPage({ navigation }) {
   // start with empty value, and changes when the user enter info

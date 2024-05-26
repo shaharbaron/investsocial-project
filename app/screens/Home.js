@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, View, RefreshControl  } from "react-native";
+import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
 import { getAllPosts } from "../firebase";
@@ -16,7 +16,7 @@ function Home({ navigation }) {
       const postsData = await getAllPosts();
       setPosts(postsData);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
     }
     setRefreshing(false);
   };

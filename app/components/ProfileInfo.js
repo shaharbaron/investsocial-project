@@ -1,42 +1,64 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import {
-  getCurrentUserUsername,
-  getCurrentUserProfileImage,
-} from "../firebase";
+import { getCurrentUserProfileImage } from "../firebase";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const ProfileInfo = () => {
   // the info in up of profile screen , the hello and profile picture
-
   const [Profilepic, setProfilepic] = useState(null);
-  async function fetchProfileImage() {
-    // this call the function that get the profile picture
-    const profileImageURL = await getCurrentUserProfileImage();
-    console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
-    if (profileImageURL) {
-      setProfilepic(profileImageURL);
-      console.log("Current user's profile image URL:", profileImageURL);
-    } else {
-      console.log("No profile image found for the current user");
-    }
-  }
+  const [Username, setUsername] = useState("");
 
-  fetchProfileImage();
-
-  const [Username, setUsername] = useState(null);
   useEffect(() => {
-    // this call the function that get the username.
-    const fetchUsername = async () => {
-      try {
-        const username = await getCurrentUserUsername();
-        console.log("Profileinfo - the username is: ", username);
-        setUsername(username);
-      } catch (error) {
-        console.log("Error");
+    const fetchProfileImage = async () => {
+      // this call the function that get the profile picture
+      const profileImageURL = await getCurrentUserProfileImage();
+      console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
+      if (profileImageURL) {
+        setProfilepic(profileImageURL);
+        console.log("Current user's profile image URL:", profileImageURL);
+      } else {
+        console.log("No profile image found for the current user");
       }
     };
 
-    fetchUsername();
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    let unsubscribe;
+
+    if (user) {
+      const firestore = getFirestore();
+      const userId = user.uid;
+      const userDocRef = doc(firestore, "users", userId);
+
+      unsubscribe = onSnapshot(
+        userDocRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const userData = snapshot.data();
+            setUsername(userData.username);
+          } else {
+            console.log("User data not found");
+            setUsername("");
+          }
+        },
+        (error) => {
+          console.error("Error getting user data:", error);
+        }
+      );
+    } else {
+      console.log("No user is currently signed in");
+      setUsername("");
+    }
+
+    fetchProfileImage();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return (
@@ -51,7 +73,6 @@ const ProfileInfo = () => {
           }
         />
       )}
-      {/* <Image source = {{"https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile.png?alt=media&token=0071e735-25e1-4c7f-a6f0-9d9e73391bad" || "https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile2.jpg?alt=media&token=eafa9a00-78c6-4777-b7e5-b78a20bb68c8"}} /> */}
       <Text style={styles.username}>Hello {Username}</Text>
     </View>
   );

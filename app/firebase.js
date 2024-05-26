@@ -10,6 +10,7 @@ import {
   query,
   where,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -18,7 +19,6 @@ import {
   ref,
   getDownloadURL,
 } from "firebase/storage";
-import darkColors from "react-native-elements/dist/config/colorsDark";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -32,26 +32,6 @@ export const firebaseConfig = {
   messagingSenderId: "874121355029",
   appId: "1:874121355029:web:b380eee6525b77096b131c",
 };
-
-// export function formatTime(timestamp) {
-//   const now = Date.now();
-//   const diff = now - timestamp;
-
-//   const seconds = Math.floor(diff / 1000);
-//   const minutes = Math.floor(seconds / 60);
-//   const hours = Math.floor(minutes / 60);
-//   const days = Math.floor(hours / 24);
-
-//   if (seconds < 60) {
-//     return 'now';
-//   } else if (minutes < 60) {
-//     return `${minutes}m`;
-//   } else if (hours < 24) {
-//     return `${hours}h`;
-//   } else {
-//     return `${days}d`;
-//   }
-// }
 
 export const loginWithEmailAndPassword = async (email, password) => {
   try {
@@ -157,7 +137,10 @@ export const getCurrentUserProfileImage = async () => {
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        console.log("firebase - the userdata is :", userData);
+        console.log(
+          "firebase - getcurrentprofile - the userdata is :",
+          userData
+        );
         const profileImageUrl = userData.profileImageUrl;
         console.log("firebase - the profileImageUrl is:", profileImageUrl);
         return profileImageUrl;
@@ -209,6 +192,61 @@ export const getCurrentUserUsername = () => {
       resolve(null);
     }
   });
+};
+
+export const updateProfileImage = async (userId, imageUri) => {
+  try {
+    const storage = getStorage();
+    const imageRef = sRef(storage, `/profile-images/${userId}`);
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    await uploadBytes(imageRef, blob);
+    const downloadURL = await getDownloadURL(imageRef);
+
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, "users", userId);
+    await updateDoc(userDocRef, {
+      profileImageUrl: downloadURL,
+    });
+
+    return downloadURL;
+  } catch (error) {
+    console.error("Error updating profile image:", error);
+    throw error;
+  }
+};
+
+export const updateUsername = async (userId, newUsername) => {
+  try {
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, "users", userId);
+    const userDoc = await getDoc(userDocRef);
+
+    console.log("Firebase - updateuser - the userdoc is :", userDoc);
+    if (userDoc.exists()) {
+      // Check if the new username is already taken
+      const usersCollection = collection(firestore, "users");
+      const q = query(usersCollection, where("username", "==", newUsername));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        // Username is available, update the user document
+        await updateDoc(userDocRef, {
+          username: newUsername,
+        });
+        return true;
+      } else {
+        // Username is already taken
+        return false;
+      }
+    } else {
+      console.log("User document does not exist");
+      return false;
+    }
+  } catch (error) {
+    console.error("Error updating username:", error);
+    throw error;
+  }
 };
 
 // Initialize Firebase

@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
-import SignUpPage from "../components/SignUpPage";
+import SignUpPage from "../components/Pages/SignUpPage";
 import LogoUp from "../components/LogoUp";
 
 function Signup({ navigation }) {

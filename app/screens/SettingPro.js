@@ -13,10 +13,19 @@ import AppTextInput from "../components/AppTextInput";
 import {
   getCurrentUserProfileImage,
   getCurrentUserUsername,
+  updateProfileImage,
+  updateUsername,
 } from "../firebase";
+import { getAuth } from "firebase/auth";
+import Takepicture from "../components/Icons/Takepicture";
+import Selectimage from "../components/Icons/Selectimage";
 
-function SettingPro({ navigation }) {
+function SettingPro(props) {
   const [Profilepic, setProfilepic] = useState(null);
+  const [Username, setUsername] = useState(null);
+  const [newImage, setNewImage] = useState(null);
+  const [newUsername, setNewUsername] = useState("");
+
   async function fetchProfileImage() {
     // this call the function that get the profile picture
     const profileImageURL = await getCurrentUserProfileImage();
@@ -30,7 +39,6 @@ function SettingPro({ navigation }) {
 
   fetchProfileImage();
 
-  const [Username, setUsername] = useState(null);
   useEffect(() => {
     // this call the function that get the username.
     const fetchUsername = async () => {
@@ -46,33 +54,71 @@ function SettingPro({ navigation }) {
     fetchUsername();
   }, []);
 
+  const onImageSelected = (imageUri) => {
+    setNewImage(imageUri);
+  };
+
+  const onSaveButtonPress = async () => {
+    // save all the new info in the DB
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const userId = user.uid;
+    console.log("SettingPro - the profilepic is :", Profilepic);
+    console.log("SettingPro - the Username is :", Username);
+    console.log("SettingPro - the newImage is :", newImage);
+    console.log("SettingPro - the newUsername is :", newUsername);
+    console.log("SettingPro - the userId is : ", userId);
+    try {
+      if (newImage) {
+        // Update the profile picture in the database
+        await updateProfileImage(userId, newImage);
+        setProfilepic(newImage);
+        setNewImage(null);
+      }
+
+      if (newUsername.trim() !== "") {
+        // Update the username in the database
+        await updateUsername(userId, newUsername.trim());
+        setUsername(newUsername.trim());
+        setNewUsername("");
+      }
+    } catch (error) {
+      console.log("Error updating profile:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <LogoUp />
       <View style={{ flexDirection: "row", marginTop: 10, marginBottom: 30 }}>
-        
         <Text style={{ fontSize: 25, marginRight: 160 }}>Profile picture</Text>
-        <TouchableOpacity style={styles.edit}>
-          <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
-        </TouchableOpacity>
+        <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
       </View>
-      <Image
-        style={styles.profile}
-        source={
-          Profilepic
-            ? { uri: Profilepic }
-            : require("../assets/images/profile.png")
-        }
-      />
+      <View style={{ flexDirection: "row" }}>
+        <Takepicture onImageSelected={onImageSelected} />
+        <Image
+          style={styles.profile}
+          source={
+            newImage
+              ? { uri: newImage }
+              : Profilepic
+              ? { uri: Profilepic }
+              : require("../assets/images/profile.png")
+          }
+        />
+        <Selectimage onImageSelected={onImageSelected} />
+      </View>
       <View style={{ flexDirection: "row", marginTop: 40, marginBottom: 30 }}>
         <Text style={{ fontSize: 25, marginRight: 195 }}>Username</Text>
-        <TouchableOpacity style={styles.edit}>
-          <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
-        </TouchableOpacity>
+        <Text style={{ fontSize: 25, color: colors.blue }}>edit</Text>
       </View>
       <Text style={styles.username}>Your current username is: {Username} </Text>
-      <AppTextInput placeholder={"Change username"} />
-      <TouchableOpacity style={styles.savebutton}>
+      <AppTextInput
+        placeholder={"Change username"}
+        value={newUsername}
+        onChangeText={(text) => setNewUsername(text)}
+      />
+      <TouchableOpacity style={styles.savebutton} onPress={onSaveButtonPress}>
         <Text style={{ fontSize: 15 }}>Save</Text>
       </TouchableOpacity>
     </View>
@@ -106,6 +152,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginRight: 59,
     marginBottom: 10,
+  },
+  icon: {
+    marginTop: 60,
   },
 });
 
