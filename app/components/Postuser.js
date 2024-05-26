@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Text, Platform } from "react-native";
 import moment from "moment";
-import { doc, onSnapshot } from "firebase/firestore";
-import { FIRESTORE_DB } from "../firebase";
 import { getUserByEmail } from "../firebase";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
@@ -21,7 +19,10 @@ function Postuser({ email, createdAt, title, image }) {
   useEffect(() => {
     const getUserDetails = async () => {
       const userDet = await getUserByEmail(email);
-      if (userDet) setUserDetails(userDet);
+      if (userDet) {
+        setUserDetails(userDet);
+        console.log("Postuser - the userdetails is :", userDetails);
+      }
     };
 
     getUserDetails();
@@ -48,12 +49,13 @@ function Postuser({ email, createdAt, title, image }) {
 
   return (
     <View style={styles.post}>
-      <UserInfo
-        style={styles.userinfo}
-        imagepro={userDetails.profileImageUrl}
-        username={userDetails.username}
-        time={timeFromNow}
-      />
+      {userDetails && (
+        <UserInfo
+          imagepro={userDetails.profileImageUrl}
+          username={userDetails.username}
+          time={timeFromNow}
+        />
+      )}
       <Text style={styles.title}>{title}</Text>
       <Image style={styles.image} source={{ uri: image }} />
       <LikeButton />

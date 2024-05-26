@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
@@ -9,21 +15,31 @@ import { getAuth, signOut } from "firebase/auth";
 import { getPostsByEmail } from "../firebase";
 
 function Profile({ navigation }) {
+  const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
   const auth = getAuth();
   const current = auth.currentUser; // print the currentuser by the firebase - auth
   console.log("Profile - the current user is:", current); // this 3 lines is to know who is the current
+
   // all goes to database /posts
-  const [posts, setPosts] = useState([]);
   const getPostsE = async () => {
-    const posts = await getPostsByEmail(current.email);
-    if (posts.length > 0) {
-      setPosts([...posts]);
+    setRefreshing(true);
+    try {
+      const posts = await getPostsByEmail(current.email);
+      if (posts.length > 0) {
+        setPosts([...posts]);
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
     }
+    setRefreshing(false);
   };
 
   useFocusEffect(
     React.useCallback(() => {
       getPostsE();
+      handleRefresh();
     }, [])
   );
 
@@ -35,6 +51,11 @@ function Profile({ navigation }) {
       image={item.imageURL}
     />
   );
+
+  const handleRefresh = () => {
+    setPosts([]);
+    getPostsE();
+  };
 
   const handleLogout = () => {
     // logout the user from the application
@@ -70,6 +91,9 @@ function Profile({ navigation }) {
           data={posts}
           renderItem={renderPost}
           keyExtractor={(item, index) => index} // the id of each post
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
         />
       ) : null}
     </View>

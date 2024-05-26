@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { getCurrentUserProfileImage } from "../firebase";
 import { getFirestore, doc, onSnapshot } from "firebase/firestore";
@@ -9,22 +10,23 @@ const ProfileInfo = () => {
   const [Profilepic, setProfilepic] = useState(null);
   const [Username, setUsername] = useState("");
 
+  const fetchProfileImage = async () => {
+    console.log("aaa");
+    // this call the function that get the profile picture
+    const profileImageURL = await getCurrentUserProfileImage();
+    console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
+    if (profileImageURL) {
+      setProfilepic(profileImageURL);
+      console.log("Current user's profile image URL:", profileImageURL);
+    } else {
+      console.log("No profile image found for the current user");
+    }
+  };
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   useEffect(() => {
-    const fetchProfileImage = async () => {
-      // this call the function that get the profile picture
-      const profileImageURL = await getCurrentUserProfileImage();
-      console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
-      if (profileImageURL) {
-        setProfilepic(profileImageURL);
-        console.log("Current user's profile image URL:", profileImageURL);
-      } else {
-        console.log("No profile image found for the current user");
-      }
-    };
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
     let unsubscribe;
 
     if (user) {
@@ -61,18 +63,22 @@ const ProfileInfo = () => {
     };
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchProfileImage(); // call to fetch every time you enter the screen
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
-      {Profilepic ? (
-        <Image style={styles.profile} source={{ uri: Profilepic }} />
-      ) : (
-        <Image
-          style={styles.profile}
-          source={
-            "https://firebasestorage.googleapis.com/v0/b/invest-social-c2ad4.appspot.com/o/profile-images%2Fprofile.png?alt=media&token=0071e735-25e1-4c7f-a6f0-9d9e73391bad"
-          }
-        />
-      )}
+      <Image
+        style={styles.profile}
+        source={
+          Profilepic
+            ? { uri: Profilepic }
+            : require("../assets/images/profile.png")
+        }
+      />
       <Text style={styles.username}>Hello {Username}</Text>
     </View>
   );

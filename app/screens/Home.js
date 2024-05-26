@@ -23,7 +23,7 @@ function Home({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      getPosts();
+      handleRefresh();
     }, [])
   );
 
@@ -37,6 +37,7 @@ function Home({ navigation }) {
   );
 
   const handleRefresh = () => {
+    setPosts([]);
     getPosts();
   };
 
@@ -46,7 +47,7 @@ function Home({ navigation }) {
       {posts.length ? (
         <FlatList
           style={{ width: 350 }}
-          data={posts}
+          data={posts.length ? posts : []}
           renderItem={renderPost}
           keyExtractor={(item, index) => index.toString()} // the id of each post
           refreshControl={

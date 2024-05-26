@@ -71,8 +71,8 @@ function SettingPro(props) {
     try {
       if (newImage) {
         // Update the profile picture in the database
-        await updateProfileImage(userId, newImage);
-        setProfilepic(newImage);
+        const newLink = await updateProfileImage(userId, newImage);
+        setProfilepic(newLink);
         setNewImage(null);
       }
 
