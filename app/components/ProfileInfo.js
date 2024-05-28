@@ -1,35 +1,60 @@
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { FIREBASE_AUTH, getCurrentUserProfileImage } from "../firebase";
-import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+import {
+  FIREBASE_AUTH,
+  FIRESTORE_DB,
+  getCurrentUserProfileImage,
+  getCurrentUserUsername,
+} from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const ProfileInfo = () => {
   // the info in up of profile screen , the hello and profile picture
   const [Profilepic, setProfilepic] = useState(null);
   const [Username, setUsername] = useState("");
+  const user = FIREBASE_AUTH.currentUser;
 
   const fetchProfileImage = async () => {
     // this call the function that get the profile picture
-    const profileImageURL = await getCurrentUserProfileImage();
-    console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
-    if (profileImageURL) {
-      setProfilepic(profileImageURL);
-      console.log("Current user's profile image URL:", profileImageURL);
+    if (user) {
+      const profileImageURL = await getCurrentUserProfileImage();
+      console.log("ProfileInfo - the profileimageUrl is : ", profileImageURL);
+      if (profileImageURL) {
+        setProfilepic(profileImageURL);
+        console.log("Current user's profile image URL:", profileImageURL);
+      } else {
+        console.log("No profile image found for the current user");
+        setProfilepic(null);
+      }
     } else {
-      console.log("No profile image found for the current user");
+      setProfilepic(null);
     }
   };
 
-  const user = FIREBASE_AUTH.currentUser;
+  const fetchUsername = async (user) => {
+    // this call the function that get the username
+    if (user) {
+      const Username = await getCurrentUserUsername();
+      console.log("ProfileInfo - the username is : ", Username);
+      if (Username) {
+        setUsername(Username);
+        console.log("Current user's username:", Username);
+      } else {
+        console.log("No username found for the current user");
+        setUsername("");
+      }
+    } else {
+      setUsername("");
+    }
+  };
 
   useEffect(() => {
     let unsubscribe;
 
     if (user) {
-      const firestore = getFirestore();
       const userId = user.uid;
-      const userDocRef = doc(firestore, "users", userId);
+      const userDocRef = doc(FIRESTORE_DB, "users", userId);
 
       unsubscribe = onSnapshot(
         userDocRef,
@@ -59,6 +84,8 @@ const ProfileInfo = () => {
       }
     };
   }, []);
+
+  fetchProfileImage();
 
   useFocusEffect(
     React.useCallback(() => {

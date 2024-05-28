@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import ProfileInfo from "../components/ProfileInfo";
 import { useFocusEffect } from "@react-navigation/native";
-import { getPostsByEmail, logOut, FIREBASE_AUTH } from "../firebase";
+import { getPostsByEmail, FIREBASE_AUTH } from "../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Profile({ navigation }) {
@@ -52,28 +52,14 @@ function Profile({ navigation }) {
   };
 
   const handleLogout = async () => {
-    // logout the user from the application
-    // try {
-    //   await AsyncStorage.setItem("email", "");
-    //   await AsyncStorage.setItem("password", "");
-    //   await logOut();
-    //   console.log("Logout successful");
-    //   navigation.navigate("Login");
-    // } catch (error) {
-    //   console.error("Error logging out: ", error);
-    // }
-    await AsyncStorage.setItem("email", "");
-    await AsyncStorage.setItem("password", "");
-    const auth = FIREBASE_AUTH;
-    signOut(auth)
-      .then(() => {
-        console.log("number 1");
-        navigation.navigate("Login");
-      })
-      .catch((error) => {
-        // if there is error
-        console.error("Error logging out: ", error);
-      });
+    try {
+      await AsyncStorage.clear();
+      await FIREBASE_AUTH.signOut();
+      console.log("User logged out successfully");
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
   };
 
   return (

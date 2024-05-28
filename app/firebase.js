@@ -127,27 +127,12 @@ export const getPostByEmail = async (email) => {
     const resultDocs = await getDocs(PostsCollection);
     const result = resultDocs.docs
       .map((doc) => doc.data())
-      .find((Post) => Post.email != email);
+      .find((Post) => Post.email == email);
     console.log("Firebase - getPostByEmail - the post is: ", result);
     return result;
   } catch (error) {
     console.error("getPostByEmail" + error);
   }
-  // try {
-  //   const PostsCollection = collection(FIRESTORE_DB, "Posts");
-  //   const q = query(PostsCollection, where("email", "==", email));
-  //   const querySnapshot = await getDocs(q);
-  //   if (!querySnapshot.empty) {
-  //     const post = querySnapshot.docs[0].data();
-  //     console.log(post);
-  //     return post.uid;
-  //   } else {
-  //     return null;
-  //   }
-  // } catch (error) {
-  //   console.error("getEmailByUsername Error", error);
-  //   return null;
-  // }
 };
 
 export const getEmailByUsername = async (username) => {
@@ -290,16 +275,6 @@ export const updateUsername = async (userId, newUsername) => {
   }
 };
 
-// export const logOut = async () => {
-//   try {
-//     await signOut(FIREBASE_AUTH);
-//     console.log("Logout successful");
-//   } catch (error) {
-//     console.error("Error logging out: ", error);
-//     throw error;
-//   }
-// };
-
 export const updatePost = async (postId, newTitle, newImage) => {
   try {
     console.log("Firebase - the postId is :", postId);
@@ -336,3 +311,5 @@ export const updatePost = async (postId, newTitle, newImage) => {
     throw error;
   }
 };
+
+export const deletePost = async (postId) => {};

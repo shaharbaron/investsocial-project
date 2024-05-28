@@ -19,7 +19,10 @@ function Login({ navigation }) {
   const handleSavedUser = async () => {
     const savedEmail = await AsyncStorage.getItem("email");
     const savedPassword = await AsyncStorage.getItem("password");
-    handleLogin(savedEmail, savedPassword);
+    if (savedEmail && savedPassword) {
+      // the aplication dont try to register if the values is null
+      handleLogin(savedEmail, savedPassword);
+    }
   };
 
   useEffect(() => {
@@ -33,19 +36,15 @@ function Login({ navigation }) {
       const result = await loginWithEmailAndPassword(user_email, user_password);
       console.log("Login - the result is :", result);
 
-      if (result.user.uid) {
-        console.log("2...");
+      if (result && result.user && result.user.uid) {
         navigation.navigate("Home");
       } else {
         alert("Invalid email or password. Please try again");
       }
-      console.log("3...");
       console.log(result);
     } catch (error) {
-      // alert("Invalid email or password. Please try again");
       console.error("Error login the application: ", error);
     }
-    console.log("4...");
     setEmail("");
     setPassword("");
   };

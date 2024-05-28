@@ -12,10 +12,10 @@ import { getPostByEmail } from "../firebase";
 function EditPostUser({ route }) {
   const { email, title, image } = route.params;
   const [postDetails, setPostDetails] = useState([]);
-  console.log("EditPostUser - the title is :", title);
-  console.log("EditPostUser - the image is :", image);
-  console.log("EditPostUser - the email is :", email);
-  console.log("EditPostUser - the postid is: ", route.params.email);
+  // console.log("EditPostUser - the title is :", title);
+  // console.log("EditPostUser - the image is :", image);
+  // console.log("EditPostUser - the email is :", email);
+  // console.log("EditPostUser - the postid is: ", route.params.email);
 
   useEffect(() => {
     const getPostDetails = async () => {

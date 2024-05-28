@@ -81,6 +81,9 @@ function SettingPro(props) {
         setUsername(newUsername.trim());
         setNewUsername("");
       }
+
+      // Navigate back to the Profile screen
+      props.navigation.goBack();
     } catch (error) {
       console.log("Error updating profile:", error);
     }
