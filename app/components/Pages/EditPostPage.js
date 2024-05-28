@@ -11,17 +11,20 @@ import {
 } from "react-native";
 import colors from "../../config/colors";
 import * as ImagePicker from "expo-image-picker";
-import { FIREBASE_AUTH, submitNewPost } from "../../firebase";
+import { FIREBASE_AUTH, updatePost } from "../../firebase";
 
-function CreatePage() {
+function EditPostPage({ postId, initialTitle, initialImage }) {
+  console.log("EditPostPage - the postId is :", postId);
+  console.log("EditPostPage - the title is :", initialTitle);
+  console.log("EditPostPage - the image is :", initialImage);
   const current = FIREBASE_AUTH.currentUser;
-  //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
-  const [caption, setCaption] = useState("");
-  const [image, setImage] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); //
+  // console.log ("EditPostPage - the current.uid is :" , current.uid);
+  const [newCaption, setnewCaption] = useState(initialTitle);
+  const [newImage, setnewImage] = useState(initialImage);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCaptionChange = (text) => {
-    setCaption(text);
+    setnewCaption(text);
   };
 
   const handleImagePicker = async () => {
@@ -40,41 +43,37 @@ function CreatePage() {
 
     if (!result.canceled) {
       //console.log("Create -  the result.uri is: ", result.uri);
-      setImage(result.uri);
+      setnewImage(result.uri);
     }
   };
 
   const handlePostSubmit = async () => {
-    // Pass the caption and image URI to the database Posts
-    if (!caption.trim()) {
+    // Check if the user enter caption
+    if (!newCaption.trim()) {
       alert("Please enter a caption before posting.");
       return;
     }
     setIsSubmitting(true);
-    submitNewPost(current.email, caption, image);
-
+    updatePost(postId, newCaption, newImage);
     setIsSubmitting(false);
-    setCaption("");
-    setImage(null);
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create new post</Text>
+      <Text style={styles.title}>Update your post</Text>
       <Text style={styles.caption}>Caption</Text>
       <TextInput
         style={styles.input}
-        value={caption}
-        placeholder="Enter your post here"
+        value={newCaption}
         onChangeText={handleCaptionChange}
         multiline
       />
-      <Text style={styles.addphoto}>Add photo</Text>
+      <Text style={styles.addphoto}>Change photo</Text>
       <Text>SUPPORT THIS: SVG, PNG, JPG, GIF, JPEG TYPES </Text>
       <TouchableOpacity style={styles.button} onPress={handleImagePicker}>
         <Text style={styles.buttontext}>Upload</Text>
       </TouchableOpacity>
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
+      {newImage && (
+        <Image source={{ uri: newImage }} style={{ width: 150, height: 150 }} />
       )}
       <TouchableOpacity
         style={styles.button}
@@ -84,7 +83,7 @@ function CreatePage() {
         {isSubmitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttontext}>Post</Text>
+          <Text style={styles.buttontext}>Save</Text>
         )}
       </TouchableOpacity>
     </View>
@@ -143,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePage;
+export default EditPostPage;

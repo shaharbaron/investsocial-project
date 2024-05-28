@@ -1,25 +1,18 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  FlatList,
-  RefreshControl,
-} from "react-native";
+import { StyleSheet, View, FlatList, RefreshControl } from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import ProfileInfo from "../components/ProfileInfo";
 import { useFocusEffect } from "@react-navigation/native";
-import { getAuth, signOut } from "firebase/auth";
-import { getPostsByEmail } from "../firebase";
+import { getPostsByEmail, logOut, FIREBASE_AUTH } from "../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Profile({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const auth = getAuth();
-  const current = auth.currentUser; // print the currentuser by the firebase - auth
+  const current = FIREBASE_AUTH.currentUser; // print the currentuser by the firebase - auth
   console.log("Profile - the current user is:", current); // this 3 lines is to know who is the current
 
   // all goes to database /posts
@@ -45,6 +38,7 @@ function Profile({ navigation }) {
 
   const renderPost = ({ item }) => (
     <Postuser
+      navigation={navigation}
       email={item.email}
       time={item.time}
       title={item.title}
@@ -57,11 +51,23 @@ function Profile({ navigation }) {
     getPostsE();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // logout the user from the application
-    const auth = getAuth();
+    // try {
+    //   await AsyncStorage.setItem("email", "");
+    //   await AsyncStorage.setItem("password", "");
+    //   await logOut();
+    //   console.log("Logout successful");
+    //   navigation.navigate("Login");
+    // } catch (error) {
+    //   console.error("Error logging out: ", error);
+    // }
+    await AsyncStorage.setItem("email", "");
+    await AsyncStorage.setItem("password", "");
+    const auth = FIREBASE_AUTH;
     signOut(auth)
       .then(() => {
+        console.log("number 1");
         navigation.navigate("Login");
       })
       .catch((error) => {
@@ -74,15 +80,19 @@ function Profile({ navigation }) {
     <View style={styles.container}>
       <LogoUp />
       <View style={{ flexDirection: "row", marginTop: 5 }}>
-        <TouchableOpacity onPress={handleLogout}>
-          <Feather name="log-out" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.setting}
+        <Feather
+          name="log-out"
+          size={24}
+          color="black"
+          onPress={handleLogout}
+        />
+        <Feather
+          name="settings"
+          size={24}
+          color="black"
+          style={{ marginLeft: 300 }}
           onPress={() => navigation.navigate("SettingPro")}
-        >
-          <Feather name="settings" size={24} color="black" />
-        </TouchableOpacity>
+        />
       </View>
       <ProfileInfo />
       {posts.length ? (
@@ -104,9 +114,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  setting: {
-    marginLeft: 300,
   },
 });
 

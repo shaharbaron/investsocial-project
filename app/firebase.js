@@ -1,4 +1,8 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import {
   getDocs,
@@ -19,6 +23,7 @@ import {
   ref,
   getDownloadURL,
 } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -33,13 +38,23 @@ export const firebaseConfig = {
   appId: "1:874121355029:web:b380eee6525b77096b131c",
 };
 
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
+
 export const loginWithEmailAndPassword = async (email, password) => {
   try {
     const auth = FIREBASE_AUTH;
     const result = await signInWithEmailAndPassword(auth, email, password);
+    await AsyncStorage.setItem("email", email);
+    await AsyncStorage.setItem("password", password);
+    console.log("10....");
     return result;
   } catch (error) {
     console.log(error);
+    console.log("11....");
   }
 };
 
@@ -56,12 +71,10 @@ export const getAllPosts = async () => {
 
 export const getPostsByEmail = async (email) => {
   try {
-    // console.log("Firebase - the email is :", email);
     const postsCollection = collection(FIRESTORE_DB, "Posts");
     const q = query(postsCollection, where("email", "==", email));
     const querySnapshot = await getDocs(q);
     const result = querySnapshot.docs.map((doc) => doc.data());
-    // console.log("Firebase - getPostsByEmail result:", result);
     return result;
   } catch (error) {
     console.error("getPostsByEmail Error" + error);
@@ -83,7 +96,6 @@ export const submitNewPost = async (email, caption, image) => {
       title: caption,
       imageURL: downloadURL,
       createdAt: new Date().toISOString(), // save the time in ISO format
-      // time: Date.now(),
     };
 
     const postsCollection = collection(FIRESTORE_DB, "Posts");
@@ -106,6 +118,38 @@ export const getUserByEmail = async (email) => {
   }
 };
 
+export const getPostByEmail = async (email) => {
+  try {
+    // const cureentpost = FIRESTORE_DB.cureentpost;
+    // console.log ("the is: ", cureentpost);
+    console.log("Firebase - getPostByEmail - the email is: ", email);
+    const PostsCollection = collection(FIRESTORE_DB, "Posts");
+    const resultDocs = await getDocs(PostsCollection);
+    const result = resultDocs.docs
+      .map((doc) => doc.data())
+      .find((Post) => Post.email != email);
+    console.log("Firebase - getPostByEmail - the post is: ", result);
+    return result;
+  } catch (error) {
+    console.error("getPostByEmail" + error);
+  }
+  // try {
+  //   const PostsCollection = collection(FIRESTORE_DB, "Posts");
+  //   const q = query(PostsCollection, where("email", "==", email));
+  //   const querySnapshot = await getDocs(q);
+  //   if (!querySnapshot.empty) {
+  //     const post = querySnapshot.docs[0].data();
+  //     console.log(post);
+  //     return post.uid;
+  //   } else {
+  //     return null;
+  //   }
+  // } catch (error) {
+  //   console.error("getEmailByUsername Error", error);
+  //   return null;
+  // }
+};
+
 export const getEmailByUsername = async (username) => {
   try {
     // console.log("Firebase - getEmailByUser is :", username);
@@ -126,9 +170,7 @@ export const getEmailByUsername = async (username) => {
 };
 
 export const getCurrentUserProfileImage = async () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  // console.log("firebase - getpropic - the user is: ", user);
+  const user = FIREBASE_AUTH.currentUser;
   if (user) {
     try {
       const firestore = getFirestore();
@@ -160,8 +202,7 @@ export const getCurrentUserProfileImage = async () => {
 
 export const getCurrentUserUsername = () => {
   return new Promise((resolve, reject) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    const user = FIREBASE_AUTH.currentUser;
 
     if (user) {
       const firestore = getFirestore();
@@ -249,7 +290,49 @@ export const updateUsername = async (userId, newUsername) => {
   }
 };
 
-// Initialize Firebase
-export const FIREBASE_APP = initializeApp(firebaseConfig);
-export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
-export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
+// export const logOut = async () => {
+//   try {
+//     await signOut(FIREBASE_AUTH);
+//     console.log("Logout successful");
+//   } catch (error) {
+//     console.error("Error logging out: ", error);
+//     throw error;
+//   }
+// };
+
+export const updatePost = async (postId, newTitle, newImage) => {
+  try {
+    console.log("Firebase - the postId is :", postId);
+    console.log("Firebase - the newTitle is :", newTitle);
+    console.log("Firebase - the newImage is :", newImage);
+    const postsCollection = collection(FIRESTORE_DB, "Posts");
+    const postDoc = await getDoc(doc(postsCollection, postId));
+    if (postDoc.exists()) {
+      const postData = postDoc.data();
+      console.log("Firebase - the post is :", postData);
+
+      const updatedPost = {
+        ...postData,
+        title: newTitle || postData.title,
+      };
+
+      if (newImage) {
+        const storage = getStorage();
+        const imagesUrl = sRef(storage, "/posts-images/" + postId);
+        const response = await fetch(newImage);
+        const blob = await response.blob();
+        await uploadBytes(imagesUrl, blob);
+        const downloadURL = await getDownloadURL(imagesUrl);
+        updatedPost.imageURL = downloadURL;
+      }
+
+      await updateDoc(postDoc.ref, updatedPost);
+      console.log("Post updated successfully");
+    } else {
+      console.log("Post does not exist");
+    }
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+};

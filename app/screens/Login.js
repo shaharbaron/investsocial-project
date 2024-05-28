@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -9,24 +9,43 @@ import {
 import LogoUp from "../components/LogoUp";
 import colors from "../config/colors";
 import AppTextInput from "../components/AppTextInput";
-import { loginWithEmailAndPassword } from "../firebase.js";
+import { loginWithEmailAndPassword } from "../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const handleSavedUser = async () => {
+    const savedEmail = await AsyncStorage.getItem("email");
+    const savedPassword = await AsyncStorage.getItem("password");
+    handleLogin(savedEmail, savedPassword);
+  };
+
+  useEffect(() => {
+    handleSavedUser();
+  }, []);
+
+  const handleLogin = async (user_email, user_password) => {
     try {
-      const result = await loginWithEmailAndPassword(email, password);
+      console.log("Login - the user-email is :", user_email);
+      console.log("Login - the user-pass is :", user_password);
+      const result = await loginWithEmailAndPassword(user_email, user_password);
+      console.log("Login - the result is :", result);
+
       if (result.user.uid) {
+        console.log("2...");
         navigation.navigate("Home");
       } else {
         alert("Invalid email or password. Please try again");
       }
+      console.log("3...");
       console.log(result);
     } catch (error) {
-      alert("Invalid email or password. Please try again");
+      // alert("Invalid email or password. Please try again");
+      console.error("Error login the application: ", error);
     }
+    console.log("4...");
     setEmail("");
     setPassword("");
   };
@@ -52,7 +71,7 @@ function Login({ navigation }) {
       ></AppTextInput>
       <TouchableOpacity
         style={styles.loginbutton}
-        onPress={() => handleLogin()}
+        onPress={() => handleLogin(email, password)}
       >
         <Text style={styles.buttonlog}>Log in</Text>
       </TouchableOpacity>

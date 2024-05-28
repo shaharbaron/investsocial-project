@@ -42,6 +42,7 @@ function Explore(props) {
 
   const renderPost = ({ item }) => (
     <Postuser
+      navigation={navigation}
       email={item.email}
       time={item.time}
       title={item.title}

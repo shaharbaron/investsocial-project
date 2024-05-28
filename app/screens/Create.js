@@ -8,7 +8,7 @@ import {
 import LogoUp from "../components/LogoUp";
 import CreatePage from "../components/Pages/CreatePage";
 
-function Create({ navigation }) {
+function Create(props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

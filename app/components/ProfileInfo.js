@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { getCurrentUserProfileImage } from "../firebase";
+import { FIREBASE_AUTH, getCurrentUserProfileImage } from "../firebase";
 import { getFirestore, doc, onSnapshot } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 const ProfileInfo = () => {
   // the info in up of profile screen , the hello and profile picture
@@ -11,7 +10,6 @@ const ProfileInfo = () => {
   const [Username, setUsername] = useState("");
 
   const fetchProfileImage = async () => {
-    console.log("aaa");
     // this call the function that get the profile picture
     const profileImageURL = await getCurrentUserProfileImage();
     console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);
@@ -23,8 +21,7 @@ const ProfileInfo = () => {
     }
   };
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const user = FIREBASE_AUTH.currentUser;
 
   useEffect(() => {
     let unsubscribe;

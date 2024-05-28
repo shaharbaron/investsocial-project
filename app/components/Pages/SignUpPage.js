@@ -9,9 +9,10 @@ import {
 import AppTextInput from "../AppTextInput";
 import colors from "../../config/colors";
 import CameraButton from "../CameraButton";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function SignUpPage({ navigation }) {
   // start with empty value, and changes when the user enter info
@@ -27,9 +28,9 @@ function SignUpPage({ navigation }) {
       return;
     }
     try {
-      const auth = getAuth();
+      console.log("Creating user...");
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        FIREBASE_AUTH,
         email,
         password
       );
@@ -39,17 +40,23 @@ function SignUpPage({ navigation }) {
 
       if (selectedImage) {
         // if choose image, we uploade to storage
+        console.log("Uploading profile image...");
         const storage = getStorage();
         const timestamp = Date.now(); // Get current timestamp
         const storageRef = ref(storage, `profile-images/${timestamp}`);
         await uploadBytes(storageRef, selectedImage);
         profileImageUrl = await getDownloadURL(storageRef);
       }
-      console.log("SignUp - here we ok2");
+      console.log("Saving user data...");
       await saveUserData(user.uid, email, name, username, selectedImage);
-      navigation.navigate("Home");
+      console.log("Saving user credentials...");
+
+      // Save user credentials to AsyncStorage
+      await AsyncStorage.setItem("email", email);
+      await AsyncStorage.setItem("password", password);
+      console.log("Sign up successful, navigating to Home...");
     } catch (error) {
-      console.log("Error signing up:", error);
+      console.error("Error signing up:", error);
       alert("An error occurred while signing up. Please try again.");
     }
     setName(""); // reset all the info
@@ -75,7 +82,7 @@ function SignUpPage({ navigation }) {
       });
       console.log("User data saved successfully!");
     } catch (error) {
-      console.error("Error saving user data: ", error);
+      console.error("Error signup the application: ", error);
       throw error;
     }
   };

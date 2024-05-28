@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  RefreshControl,
+  Image,
+} from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
 import { getAllPosts } from "../firebase";
@@ -29,6 +35,7 @@ function Home({ navigation }) {
 
   const renderPost = ({ item }) => (
     <Postuser
+      navigation={navigation}
       email={item.email}
       time={item.time}
       title={item.title}
@@ -44,6 +51,11 @@ function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <LogoUp />
+      {posts.length == 0 ? (
+        <Image source={require("../assets/images/loader.gif")}></Image>
+      ) : (
+        false
+      )}
       {posts.length ? (
         <FlatList
           style={{ width: 350 }}

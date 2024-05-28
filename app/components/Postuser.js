@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, Platform, onPress } from "react-native";
 import moment from "moment";
-import { getUserByEmail } from "../firebase";
+import { FIREBASE_AUTH, getUserByEmail } from "../firebase";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
 import LikeButton from "./Icons/LikeButton";
+import Feather from "@expo/vector-icons/Feather";
+import { AntDesign } from "@expo/vector-icons";
 
 moment.locale("en");
 
-function Postuser({ email, createdAt, title, image }) {
+function Postuser({ email, createdAt, title, image, navigation }) {
   // console.log("Postuser - the image is: ", image);
   // console.log("Postuser - the title is: ", title);
   // console.log("Postuser - the email is: ", email);
 
   const [userDetails, setUserDetails] = useState([]);
   const [timeFromNow, setTimeFromNow] = useState("");
+  const currentUser = FIREBASE_AUTH.currentUser;
 
   useEffect(() => {
     const getUserDetails = async () => {
       const userDet = await getUserByEmail(email);
       if (userDet) {
         setUserDetails(userDet);
-        console.log("Postuser - the userdetails is :", userDetails);
       }
     };
 
@@ -47,18 +49,45 @@ function Postuser({ email, createdAt, title, image }) {
     };
   }, [email, createdAt]);
 
+  const isCurrentUserPost = currentUser && currentUser.email === email;
+
   return (
     <View style={styles.post}>
       {userDetails && (
         <UserInfo
+          style={styles.userinfo}
           imagepro={userDetails.profileImageUrl}
           username={userDetails.username}
           time={timeFromNow}
         />
       )}
+      {isCurrentUserPost && (
+        <View style={{ flexDirection: "row" }}>
+          <AntDesign
+            style={{ position: "absolute", right: 8, marginTop: -25 }}
+            name="delete"
+            size={24}
+            color="black"
+            onPress={onPress}
+          />
+          <Feather
+            style={{ position: "absolute", right: 40, marginTop: -25 }}
+            name="edit"
+            size={24}
+            color="black"
+            onPress={() =>
+              navigation.navigate("EditPostUser", {
+                email: email,
+                title: title,
+                image: image,
+              })
+            }
+          />
+        </View>
+      )}
       <Text style={styles.title}>{title}</Text>
       <Image style={styles.image} source={{ uri: image }} />
-      <LikeButton />
+      {/* <LikeButton /> */}
     </View>
   );
 }

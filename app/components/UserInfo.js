@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 
-function UserInfo({ imagepro, username, time }) {
+function UserInfo({ imagepro, username, time, navigation }) {
   // profile picture, username , time of the post
   useEffect(() => {
-    console.log("Userinfo - imagepro", imagepro);
-    console.log("Userinfo - username", username);
-    console.log("Userinfo - time", time);
+    // console.log("Userinfo - imagepro", imagepro);
+    // console.log("Userinfo - username", username);
+    // console.log("Userinfo - time", time);
   }, [imagepro]);
 
   return (
@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   time: {
-    // what time ho upload the post
+    // what time the user upload the post
     fontSize: 13,
-    marginLeft: 5,
     marginTop: 7,
+    marginLeft: 5,
   },
 });
 export default UserInfo;
