@@ -14,13 +14,10 @@ import * as ImagePicker from "expo-image-picker";
 import { updatePost } from "../../firebase";
 import { getAuth } from "firebase/auth";
 
-function EditPostPage({ postId, initialTitle, initialImage }) {
+function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
   console.log("EditPostPage - the postId is :", postId);
   console.log("EditPostPage - the title is :", initialTitle);
   console.log("EditPostPage - the image is :", initialImage);
-  const auth = getAuth();
-  const current = auth.currentUser;
-  console.log("EditPostPage - the current.uid is :", current.uid);
   const [newCaption, setnewCaption] = useState(initialTitle);
   const [newImage, setnewImage] = useState(initialImage);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +46,7 @@ function EditPostPage({ postId, initialTitle, initialImage }) {
     }
   };
 
-  const handlePostSubmit = async () => {
+  const handleSaveSubmit = async () => {
     // Check if the user enter caption
     if (!newCaption.trim()) {
       alert("Please enter a caption before posting.");
@@ -79,7 +76,7 @@ function EditPostPage({ postId, initialTitle, initialImage }) {
       )}
       <TouchableOpacity
         style={styles.button}
-        onPress={handlePostSubmit}
+        onPress={handleSaveSubmit}
         disabled={isSubmitting}
       >
         {isSubmitting ? (

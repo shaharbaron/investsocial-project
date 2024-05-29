@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, RefreshControl } from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
@@ -33,7 +33,6 @@ function Profile({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      getPostsE();
       handleRefresh();
     }, [])
   );
@@ -52,6 +51,10 @@ function Profile({ navigation }) {
     setPosts([]);
     getPostsE();
   };
+
+  useEffect(() => {
+    handleRefresh();
+  }, [current]);
 
   const handleLogout = async () => {
     try {

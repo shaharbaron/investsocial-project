@@ -12,9 +12,9 @@ import {
 import colors from "../../config/colors";
 import * as ImagePicker from "expo-image-picker";
 import { submitNewPost } from "../../firebase";
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
-function CreatePage() {
+function CreatePage({navigation}) {
   const auth = getAuth();
   const current = auth.currentUser;
   //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
@@ -58,6 +58,7 @@ function CreatePage() {
     setIsSubmitting(false);
     setCaption("");
     setImage(null);
+    navigation.navigate("Home");
   };
   return (
     <View style={styles.container}>

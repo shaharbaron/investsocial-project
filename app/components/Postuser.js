@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, Platform, onPress } from "react-native";
+import { StyleSheet, View, Image, Text, Platform, Alert } from "react-native";
 import moment from "moment";
-import { getUserByEmail } from "../firebase";
+import { getUserByEmail, deletePost } from "../firebase";
 import { getAuth } from "firebase/auth";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
@@ -11,13 +11,12 @@ import { AntDesign } from "@expo/vector-icons";
 
 moment.locale("en");
 
-function Postuser({ email, createdAt, title, image, navigation }) {
+function Postuser({ email, time, title, image, navigation }) {
   // console.log("Postuser - the image is: ", image);
   // console.log("Postuser - the title is: ", title);
   // console.log("Postuser - the email is: ", email);
 
   const [userDetails, setUserDetails] = useState([]);
-  const [timeFromNow, setTimeFromNow] = useState("");
   const auth = getAuth();
   const currentUser = auth.currentUser;
 
@@ -30,26 +29,32 @@ function Postuser({ email, createdAt, title, image, navigation }) {
     };
 
     getUserDetails();
+    console.log("Postuser - the userdetails is: ", userDetails);
+  }, [email]);
 
-    const updateTime = () => {
-      const timeFromNowUpdate = moment(createdAt).calendar(null, {
-        sameDay: "[Today]",
-        nextDay: "[Tomorrow]",
-        nextWeek: "dddd",
-        lastDay: "[Yesterday]",
-        lastWeek: "[Last] dddd",
-        sameElse: "DD/MM/YYYY",
-      });
-      setTimeFromNow(timeFromNowUpdate);
-    };
-
-    updateTime(); // Update immediately
-    const interval = setInterval(updateTime, 60000); // Update every minute
-
-    return () => {
-      clearInterval(interval); // Clean up the interval on component unmount
-    };
-  }, [email, createdAt]);
+  const handleDeletePost = async () => {
+    // Show confirmation dialog to the user
+    Alert.alert(
+      "Delete Post",
+      "Are you sure you want to delete this post?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            // User confirmed deletion, call deletePost function from firebase.js
+            await deletePost(time);
+            // Refresh the posts after deletion (you can implement this based on your app's logic)
+            // For example, you can navigate back to the previous screen or refresh the current screen
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   const isCurrentUserPost = currentUser && currentUser.email === email;
 
@@ -57,10 +62,9 @@ function Postuser({ email, createdAt, title, image, navigation }) {
     <View style={styles.post}>
       {userDetails && (
         <UserInfo
-          style={styles.userinfo}
           imagepro={userDetails.profileImageUrl}
           username={userDetails.username}
-          time={timeFromNow}
+          time={userDetails.time}
         />
       )}
       {isCurrentUserPost && (
@@ -70,7 +74,7 @@ function Postuser({ email, createdAt, title, image, navigation }) {
             name="delete"
             size={24}
             color="black"
-            onPress={onPress}
+            onPress={handleDeletePost}
           />
           <Feather
             style={{ position: "absolute", right: 40, marginTop: -25 }}
@@ -79,7 +83,7 @@ function Postuser({ email, createdAt, title, image, navigation }) {
             color="black"
             onPress={() =>
               navigation.navigate("EditPostUser", {
-                email: email,
+                time: time,
                 title: title,
                 image: image,
               })

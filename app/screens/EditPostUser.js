@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   Platform,
@@ -7,27 +7,9 @@ import {
 } from "react-native";
 import LogoUp from "../components/LogoUp";
 import EditPostPage from "../components/Pages/EditPostPage";
-import { getPostByEmail } from "../firebase";
 
 function EditPostUser({ route }) {
-  const { email, title, image } = route.params;
-  const [postDetails, setPostDetails] = useState([]);
-  // console.log("EditPostUser - the title is :", title);
-  // console.log("EditPostUser - the image is :", image);
-  // console.log("EditPostUser - the email is :", email);
-  // console.log("EditPostUser - the postid is: ", route.params.email);
-
-  useEffect(() => {
-    const getPostDetails = async () => {
-      const postDet = await getPostByEmail(email);
-      if (postDet) {
-        setPostDetails(userDet);
-      }
-    };
-    getPostDetails();
-  });
-
-  console.log("EditPostUser - the postDetails is :", postDetails);
+  const { time, title, image } = route.params;
 
   return (
     <KeyboardAvoidingView
@@ -36,11 +18,7 @@ function EditPostUser({ route }) {
     >
       <LogoUp />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <EditPostPage
-          //   postId={postDetails.uid}
-          initialTitle={title}
-          initialImage={image}
-        />
+        <EditPostPage postId={time} initialTitle={title} initialImage={image} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
