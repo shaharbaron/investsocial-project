@@ -12,7 +12,6 @@ import {
 import colors from "../../config/colors";
 import * as ImagePicker from "expo-image-picker";
 import { updatePost } from "../../firebase";
-import { getAuth } from "firebase/auth";
 
 function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
   console.log("EditPostPage - the postId is :", postId);
@@ -55,6 +54,7 @@ function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
     setIsSubmitting(true);
     updatePost(postId, newCaption, newImage);
     setIsSubmitting(false);
+    navigation.navigate("Home"); // Navigate back to the Home screen
   };
   return (
     <View style={styles.container}>

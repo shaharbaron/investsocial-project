@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { submitNewPost } from "../../firebase";
 import { getAuth } from "firebase/auth";
 
-function CreatePage({navigation}) {
+function CreatePage({ navigation }) {
   const auth = getAuth();
   const current = auth.currentUser;
   //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
@@ -36,7 +36,7 @@ function CreatePage({navigation}) {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      // aspect: [16, 9],
       quality: 1,
     });
 
@@ -77,7 +77,7 @@ function CreatePage({navigation}) {
         <Text style={styles.buttontext}>Upload</Text>
       </TouchableOpacity>
       {image && (
-        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
+        <Image source={{ uri: image }} style={{ width: '100%', aspectRatio: 16 / 9 }} resizeMode="cover"/>
       )}
       <TouchableOpacity
         style={styles.button}

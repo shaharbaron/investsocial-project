@@ -8,7 +8,7 @@ import {
 import LogoUp from "../components/LogoUp";
 import CreatePage from "../components/Pages/CreatePage";
 
-function Create(props) {
+function Create({ navigation }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -16,7 +16,7 @@ function Create(props) {
     >
       <LogoUp />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <CreatePage />
+        <CreatePage navigation={navigation} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -11,7 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 moment.locale("en");
 
-function Postuser({ email, time, title, image, navigation }) {
+function Postuser({ email, time, title, image, navigation, onDeletePost }) {
   // console.log("Postuser - the image is: ", image);
   // console.log("Postuser - the title is: ", title);
   // console.log("Postuser - the email is: ", email);
@@ -29,11 +29,10 @@ function Postuser({ email, time, title, image, navigation }) {
     };
 
     getUserDetails();
-    console.log("Postuser - the userdetails is: ", userDetails);
   }, [email]);
 
   const handleDeletePost = async () => {
-    // Show confirmation dialog to the user
+    // Ask the user if he want delete the post
     Alert.alert(
       "Delete Post",
       "Are you sure you want to delete this post?",
@@ -47,8 +46,7 @@ function Postuser({ email, time, title, image, navigation }) {
           onPress: async () => {
             // User confirmed deletion, call deletePost function from firebase.js
             await deletePost(time);
-            // Refresh the posts after deletion (you can implement this based on your app's logic)
-            // For example, you can navigate back to the previous screen or refresh the current screen
+            onDeletePost(time); // Call the onDeletePost function with the deleted post's
           },
         },
       ],
@@ -92,7 +90,12 @@ function Postuser({ email, time, title, image, navigation }) {
         </View>
       )}
       <Text style={styles.title}>{title}</Text>
-      <Image style={styles.image} source={{ uri: image }} />
+      <Image
+        style={{ width: "100%", aspectRatio: 16 / 9, borderRadius: 10 }}
+        source={{ uri: image }}
+        resizeMode="cover"
+      />
+      <Text style={{ marginTop: 5 }}>{moment(time).fromNow()}</Text>
       {/* <LikeButton /> */}
     </View>
   );
@@ -113,13 +116,6 @@ const styles = StyleSheet.create({
     // the post the user write
     marginTop: 5,
     marginBottom: 7,
-  },
-  image: {
-    // the image the user add to the post
-    width: "100%",
-    height: 150,
-    resizeMode: "stretch",
-    borderRadius: 10,
   },
 });
 export default Postuser;

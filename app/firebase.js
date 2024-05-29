@@ -63,12 +63,10 @@ export const getAllPosts = async () => {
 
 export const getPostsByEmail = async (email) => {
   try {
-    // console.log("Firebase - the email is :", email);
     const postsCollection = collection(FIRESTORE_DB, "Posts");
     const q = query(postsCollection, where("email", "==", email));
     const querySnapshot = await getDocs(q);
     const result = querySnapshot.docs.map((doc) => doc.data());
-    // console.log("Firebase - getPostsByEmail result:", result);
     return result;
   } catch (error) {
     console.error("getPostsByEmail Error" + error);
@@ -275,12 +273,10 @@ export const updatePost = async (postId, newCaption, newImage) => {
   try {
     const firestore = getFirestore();
     const post = await getPostByTime(postId);
-    console.log ("Firebase - updatePost - the  post is: " , post);
+    console.log("Firebase - updatePost - the  post is: ", post);
 
     if (post) {
-      console.log("0")
       const postDocRef = doc(firestore, "Posts", post.id);
-      console.log("1");
 
       let updatedData = {};
 
@@ -290,14 +286,18 @@ export const updatePost = async (postId, newCaption, newImage) => {
       console.log("Firebase - updatePost - the updateData is: ", updatedData);
 
       if (newImage) {
-        console.log ("2");
         const storage = getStorage();
-        const imagesurl = sRef(storage, "/posts-images/" + Date.now());
+        const imagesurl = sRef(storage, "/posts-images/" + post.id);
         const response = await fetch(newImage);
-        console.log ("3");
         const blob = await response.blob();
         const bytesref = await uploadBytes(imagesurl, blob);
         const downloadURL = await getDownloadURL(bytesref.ref);
+
+        // Delete the old image if it exists
+        if (post.imageURL) {
+          const oldImageRef = ref(storage, post.imageURL);
+          await deleteObject(oldImageRef);
+        }
 
         updatedData.imageURL = downloadURL;
       }
@@ -343,7 +343,6 @@ export const deletePost = async (postTime) => {
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
-
 
 // import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 // import { initializeApp } from "firebase/app";

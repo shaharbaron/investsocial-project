@@ -11,7 +11,6 @@ const ProfileInfo = () => {
   const [Username, setUsername] = useState("");
 
   const fetchProfileImage = async () => {
-    console.log("aaa");
     // this call the function that get the profile picture
     const profileImageURL = await getCurrentUserProfileImage();
     console.log("ProfileInfo1 - the profileimageUrl is : ", profileImageURL);

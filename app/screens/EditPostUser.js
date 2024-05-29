@@ -8,7 +8,7 @@ import {
 import LogoUp from "../components/LogoUp";
 import EditPostPage from "../components/Pages/EditPostPage";
 
-function EditPostUser({ route }) {
+function EditPostUser({ route, navigation }) {
   const { time, title, image } = route.params;
 
   return (
@@ -18,7 +18,12 @@ function EditPostUser({ route }) {
     >
       <LogoUp />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <EditPostPage postId={time} initialTitle={title} initialImage={image} />
+        <EditPostPage
+          postId={time}
+          initialTitle={title}
+          initialImage={image}
+          navigation={navigation}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

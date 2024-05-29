@@ -33,6 +33,13 @@ function Home({ navigation }) {
     }, [])
   );
 
+  const handleDeletePost = (deletedPostTime) => {
+    // filter the posts list and delete the post that deleted
+    setPosts((prevPosts) =>
+      prevPosts.filter((post) => post.time !== deletedPostTime)
+    );
+  };
+
   const renderPost = ({ item }) => (
     <Postuser
       navigation={navigation}
@@ -40,6 +47,7 @@ function Home({ navigation }) {
       time={item.time}
       title={item.title}
       image={item.imageURL}
+      onDeletePost={handleDeletePost} // pass the onDeletePost function as a props
     />
   );
 
