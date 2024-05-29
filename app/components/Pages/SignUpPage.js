@@ -11,7 +11,8 @@ import colors from "../../config/colors";
 import CameraButton from "../CameraButton";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../../firebase";
+import { createUserWithEmailAndPassword } from "../../firebase";
+import { getAuth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function SignUpPage({ navigation }) {
@@ -28,9 +29,10 @@ function SignUpPage({ navigation }) {
       return;
     }
     try {
+      const auth = getAuth();
       console.log("Creating user...");
       const userCredential = await createUserWithEmailAndPassword(
-        FIREBASE_AUTH,
+        auth,
         email,
         password
       );

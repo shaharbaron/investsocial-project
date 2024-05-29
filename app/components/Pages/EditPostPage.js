@@ -11,14 +11,16 @@ import {
 } from "react-native";
 import colors from "../../config/colors";
 import * as ImagePicker from "expo-image-picker";
-import { FIREBASE_AUTH, updatePost } from "../../firebase";
+import { updatePost } from "../../firebase";
+import { getAuth } from "firebase/auth";
 
 function EditPostPage({ postId, initialTitle, initialImage }) {
   console.log("EditPostPage - the postId is :", postId);
   console.log("EditPostPage - the title is :", initialTitle);
   console.log("EditPostPage - the image is :", initialImage);
-  const current = FIREBASE_AUTH.currentUser;
-  // console.log ("EditPostPage - the current.uid is :" , current.uid);
+  const auth = getAuth();
+  const current = auth.currentUser;
+  console.log("EditPostPage - the current.uid is :", current.uid);
   const [newCaption, setnewCaption] = useState(initialTitle);
   const [newImage, setnewImage] = useState(initialImage);
   const [isSubmitting, setIsSubmitting] = useState(false);

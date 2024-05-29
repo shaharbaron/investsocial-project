@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, Image, StyleSheet } from "react-native";
 import {
-  FIREBASE_AUTH,
-  FIRESTORE_DB,
   getCurrentUserProfileImage,
   getCurrentUserUsername,
 } from "../firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { doc, onSnapshot, getFirestore } from "firebase/firestore";
 
 const ProfileInfo = () => {
   // the info in up of profile screen , the hello and profile picture
   const [Profilepic, setProfilepic] = useState(null);
   const [Username, setUsername] = useState("");
-  const user = FIREBASE_AUTH.currentUser;
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   const fetchProfileImage = async () => {
     // this call the function that get the profile picture
@@ -54,7 +54,8 @@ const ProfileInfo = () => {
 
     if (user) {
       const userId = user.uid;
-      const userDocRef = doc(FIRESTORE_DB, "users", userId);
+      const firestore = getFirestore();
+      const userDocRef = doc(firestore, "users", userId);
 
       unsubscribe = onSnapshot(
         userDocRef,

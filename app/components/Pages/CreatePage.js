@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import colors from "../../config/colors";
 import * as ImagePicker from "expo-image-picker";
-import { FIREBASE_AUTH, submitNewPost } from "../../firebase";
+import { submitNewPost } from "../../firebase";
+import { getAuth } from 'firebase/auth';
 
 function CreatePage() {
-  const current = FIREBASE_AUTH.currentUser;
+  const auth = getAuth();
+  const current = auth.currentUser;
   //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);

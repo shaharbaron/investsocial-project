@@ -15,8 +15,8 @@ import {
   getCurrentUserUsername,
   updateProfileImage,
   updateUsername,
-  FIREBASE_AUTH,
 } from "../firebase";
+import { getAuth } from "firebase/auth";
 import Takepicture from "../components/Icons/Takepicture";
 import Selectimage from "../components/Icons/Selectimage";
 
@@ -60,7 +60,8 @@ function SettingPro(props) {
 
   const onSaveButtonPress = async () => {
     // save all the new info in the DB
-    const user = FIREBASE_AUTH.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
     const userId = user.uid;
     console.log("SettingPro - the profilepic is :", Profilepic);
     console.log("SettingPro - the Username is :", Username);

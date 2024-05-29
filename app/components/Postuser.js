@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Text, Platform, onPress } from "react-native";
 import moment from "moment";
-import { FIREBASE_AUTH, getUserByEmail } from "../firebase";
+import { getUserByEmail } from "../firebase";
+import { getAuth } from "firebase/auth";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
 import LikeButton from "./Icons/LikeButton";
@@ -17,7 +18,8 @@ function Postuser({ email, createdAt, title, image, navigation }) {
 
   const [userDetails, setUserDetails] = useState([]);
   const [timeFromNow, setTimeFromNow] = useState("");
-  const currentUser = FIREBASE_AUTH.currentUser;
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
   useEffect(() => {
     const getUserDetails = async () => {

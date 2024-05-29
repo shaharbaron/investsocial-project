@@ -5,14 +5,16 @@ import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
 import ProfileInfo from "../components/ProfileInfo";
 import { useFocusEffect } from "@react-navigation/native";
-import { getPostsByEmail, FIREBASE_AUTH } from "../firebase";
+import { getPostsByEmail } from "../firebase";
+import { getAuth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Profile({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const current = FIREBASE_AUTH.currentUser; // print the currentuser by the firebase - auth
+  const auth = getAuth();
+  const current = auth.currentUser; // print the currentuser by the firebase - auth
   console.log("Profile - the current user is:", current); // this 3 lines is to know who is the current
 
   // all goes to database /posts
@@ -54,7 +56,7 @@ function Profile({ navigation }) {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      await FIREBASE_AUTH.signOut();
+      await auth.signOut();
       console.log("User logged out successfully");
       navigation.navigate("Login");
     } catch (error) {
