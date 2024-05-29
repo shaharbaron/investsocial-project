@@ -1,9 +1,4 @@
-import {
-  signInWithEmailAndPassword,
-  initializeAuth,
-  getReactNativePersistence,
-  getAuth,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import {
   getDocs,
@@ -24,7 +19,6 @@ import {
   ref,
   getDownloadURL,
 } from "firebase/storage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -39,30 +33,19 @@ export const firebaseConfig = {
   appId: "1:874121355029:web:b380eee6525b77096b131c",
 };
 
-export const app = initializeApp(firebaseConfig);
-// export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
-//   persistence: getReactNativePersistence(AsyncStorage),
-// });
-// export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
-
 export const loginWithEmailAndPassword = async (email, password) => {
   try {
-    const auth = getAuth();
+    const auth = FIREBASE_AUTH;
     const result = await signInWithEmailAndPassword(auth, email, password);
-    await AsyncStorage.setItem("email", email);
-    await AsyncStorage.setItem("password", password);
-    console.log("10....");
     return result;
   } catch (error) {
     console.log(error);
-    console.log("11....");
   }
 };
 
 export const getAllPosts = async () => {
   try {
-    const firestore = getFirestore();
-    const postsCollection = collection(firestore, "Posts"); // the database name and collection name as parameters
+    const postsCollection = collection(FIRESTORE_DB, "Posts"); // the database name and collection name as parameters
     const resultDocs = await getDocs(postsCollection);
     const result = resultDocs.docs.map((doc) => doc.data());
     return result;
@@ -73,11 +56,12 @@ export const getAllPosts = async () => {
 
 export const getPostsByEmail = async (email) => {
   try {
-    const firestore = getFirestore();
-    const postsCollection = collection(firestore, "Posts");
+    // console.log("Firebase - the email is :", email);
+    const postsCollection = collection(FIRESTORE_DB, "Posts");
     const q = query(postsCollection, where("email", "==", email));
     const querySnapshot = await getDocs(q);
     const result = querySnapshot.docs.map((doc) => doc.data());
+    // console.log("Firebase - getPostsByEmail result:", result);
     return result;
   } catch (error) {
     console.error("getPostsByEmail Error" + error);
@@ -87,7 +71,6 @@ export const getPostsByEmail = async (email) => {
 export const submitNewPost = async (email, caption, image) => {
   console.log("Firebase - in sumbitnewpost the image is", image);
   try {
-    const firestore = getFirestore();
     const storage = getStorage();
     const imagesurl = sRef(storage, "/posts-images/" + Date.now());
     const response = await fetch(image);
@@ -100,9 +83,10 @@ export const submitNewPost = async (email, caption, image) => {
       title: caption,
       imageURL: downloadURL,
       createdAt: new Date().toISOString(), // save the time in ISO format
+      // time: Date.now(),
     };
 
-    const postsCollection = collection(firestore, "Posts");
+    const postsCollection = collection(FIRESTORE_DB, "Posts");
     await addDoc(postsCollection, newPost);
   } catch (error) {
     console.error("submitNewPost Error" + error);
@@ -111,8 +95,7 @@ export const submitNewPost = async (email, caption, image) => {
 
 export const getUserByEmail = async (email) => {
   try {
-    const firestore = getFirestore();
-    const usersCollection = collection(firestore, "users");
+    const usersCollection = collection(FIRESTORE_DB, "users");
     const resultDocs = await getDocs(usersCollection);
     const result = resultDocs.docs
       .map((doc) => doc.data())
@@ -123,27 +106,10 @@ export const getUserByEmail = async (email) => {
   }
 };
 
-export const getPostByEmail = async (email) => {
-  try {
-    const firestore = getFirestore();
-    console.log("Firebase - getPostByEmail - the email is: ", email);
-    const PostsCollection = collection(firestore, "Posts");
-    const resultDocs = await getDocs(PostsCollection);
-    const result = resultDocs.docs
-      .map((doc) => doc.data())
-      .find((Post) => Post.email == email);
-    console.log("Firebase - getPostByEmail - the post is: ", result);
-    return result;
-  } catch (error) {
-    console.error("getPostByEmail" + error);
-  }
-};
-
 export const getEmailByUsername = async (username) => {
   try {
     // console.log("Firebase - getEmailByUser is :", username);
-    const firestore = getFirestore();
-    const usersCollection = collection(firestore, "users");
+    const usersCollection = collection(FIRESTORE_DB, "users");
     const q = query(usersCollection, where("username", "==", username));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
@@ -162,6 +128,7 @@ export const getEmailByUsername = async (username) => {
 export const getCurrentUserProfileImage = async () => {
   const auth = getAuth();
   const user = auth.currentUser;
+  // console.log("firebase - getpropic - the user is: ", user);
   if (user) {
     try {
       const firestore = getFirestore();
@@ -282,42 +249,23 @@ export const updateUsername = async (userId, newUsername) => {
   }
 };
 
-export const updatePost = async (postId, newTitle, newImage) => {
+export const getPostByEmail = async (email) => {
   try {
-    console.log("Firebase - the postId is :", postId);
-    console.log("Firebase - the newTitle is :", newTitle);
-    console.log("Firebase - the newImage is :", newImage);
     const firestore = getFirestore();
-    const postsCollection = collection(firestore, "Posts");
-    const postDoc = await getDoc(doc(postsCollection, postId));
-    if (postDoc.exists()) {
-      const postData = postDoc.data();
-      console.log("Firebase - the post is :", postData);
-
-      const updatedPost = {
-        ...postData,
-        title: newTitle || postData.title,
-      };
-
-      if (newImage) {
-        const storage = getStorage();
-        const imagesUrl = sRef(storage, "/posts-images/" + postId);
-        const response = await fetch(newImage);
-        const blob = await response.blob();
-        await uploadBytes(imagesUrl, blob);
-        const downloadURL = await getDownloadURL(imagesUrl);
-        updatedPost.imageURL = downloadURL;
-      }
-
-      await updateDoc(postDoc.ref, updatedPost);
-      console.log("Post updated successfully");
-    } else {
-      console.log("Post does not exist");
-    }
+    console.log("Firebase - getPostByEmail - the email is: ", email);
+    const PostsCollection = collection(firestore, "Posts");
+    const resultDocs = await getDocs(PostsCollection);
+    const result = resultDocs.docs
+      .map((doc) => doc.data())
+      .find((Post) => Post.email == email);
+    console.log("Firebase - getPostByEmail - the post is: ", result);
+    return result;
   } catch (error) {
-    console.error("Error updating post:", error);
-    throw error;
+    console.error("getPostByEmail" + error);
   }
 };
 
-export const deletePost = async (postId) => {};
+// Initialize Firebase
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
+export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
