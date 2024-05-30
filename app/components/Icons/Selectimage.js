@@ -1,7 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 function Selectimage({ onImageSelected }) {
   const pickImage = async () => {
@@ -20,18 +20,19 @@ function Selectimage({ onImageSelected }) {
 
   return (
     <View>
-      <TouchableOpacity style={styles.icon} onPress={pickImage}>
-        <MaterialIcons name="photo-library" size={20} color="gray" />
-      </TouchableOpacity>
+      <Ionicons
+        style={{ marginTop: 60 }}
+        name="image"
+        size={22}
+        color="black"
+        onPress={pickImage}
+      />
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-  },
-  icon: {
-    marginTop: 60,
   },
 });
 

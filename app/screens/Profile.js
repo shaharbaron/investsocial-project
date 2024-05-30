@@ -21,9 +21,11 @@ function Profile({ navigation }) {
   const getPostsE = async () => {
     setRefreshing(true);
     try {
-      const posts = await getPostsByEmail(current.email);
-      if (posts.length > 0) {
-        setPosts([...posts]);
+      if (current) {
+        const posts = await getPostsByEmail(current.email);
+        if (posts.length > 0) {
+          setPosts([...posts]);
+        }
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -33,8 +35,10 @@ function Profile({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
+      if (current){
       handleRefresh();
-    }, [])
+      }
+    }, [current])
   );
 
   const handleDeletePost = (deletedPostTime) => {

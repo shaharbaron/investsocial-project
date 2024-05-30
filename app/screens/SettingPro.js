@@ -44,7 +44,7 @@ function SettingPro(props) {
     const fetchUsername = async () => {
       try {
         const username = await getCurrentUserUsername();
-        console.log("Profileinfo - the username is: ", username);
+        console.log("SettingPro - the username is: ", username);
         setUsername(username);
       } catch (error) {
         console.log("Error");

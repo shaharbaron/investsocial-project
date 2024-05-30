@@ -77,7 +77,16 @@ function CreatePage({ navigation }) {
         <Text style={styles.buttontext}>Upload</Text>
       </TouchableOpacity>
       {image && (
-        <Image source={{ uri: image }} style={{ width: '100%', aspectRatio: 16 / 9 }} resizeMode="cover"/>
+        <Image
+          source={{ uri: image }}
+          style={{
+            marginTop: 10,
+            borderRadius: 10,
+            width: "90%",
+            aspectRatio: 16 / 9,
+          }}
+          resizeMode="cover"
+        />
       )}
       <TouchableOpacity
         style={styles.button}

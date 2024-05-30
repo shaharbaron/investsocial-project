@@ -1,7 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Foundation } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 function Takepicture({ onImageSelected }) {
   const takePhoto = async () => {
@@ -19,9 +19,13 @@ function Takepicture({ onImageSelected }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.icon} onPress={takePhoto}>
-        <Foundation name="camera" size={20} color="gray" />
-      </TouchableOpacity>
+      <Ionicons
+        style={{ marginTop: 60 }}
+        name="camera"
+        size={22}
+        color="black"
+        onPress={takePhoto}
+      />
     </View>
   );
 }
@@ -29,9 +33,6 @@ function Takepicture({ onImageSelected }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-  },
-  icon: {
-    marginTop: 60,
   },
 });
 

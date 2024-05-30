@@ -10,9 +10,13 @@ import AppTextInput from "../AppTextInput";
 import colors from "../../config/colors";
 import CameraButton from "../CameraButton";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createUserWithEmailAndPassword } from "../../firebase";
-import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  sRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function SignUpPage({ navigation }) {
@@ -45,12 +49,15 @@ function SignUpPage({ navigation }) {
         console.log("Uploading profile image...");
         const storage = getStorage();
         const timestamp = Date.now(); // Get current timestamp
-        const storageRef = ref(storage, `profile-images/${timestamp}`);
-        await uploadBytes(storageRef, selectedImage);
-        profileImageUrl = await getDownloadURL(storageRef);
+        const imageRef = sRef(storage, `profile-images/${timestamp}`);
+        const response = await fetch(selectedImage);
+        const blob = await response.blob();
+        await uploadBytes(imageRef, blob);
+        profileImageUrl = await getDownloadURL(imageRef);
+        console.log ("SignUpPage - the profileimageURL is: ", profileImageUrl);
       }
       console.log("Saving user data...");
-      await saveUserData(user.uid, email, name, username, selectedImage);
+      await saveUserData(user.uid, email, name, username, profileImageUrl);
       console.log("Saving user credentials...");
 
       // Save user credentials to AsyncStorage
@@ -67,6 +74,7 @@ function SignUpPage({ navigation }) {
     setPassword("");
     setSelectedImage(null);
   };
+
   const saveUserData = async (
     userId,
     email,

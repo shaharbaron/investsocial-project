@@ -206,9 +206,12 @@ export const updateProfileImage = async (userId, imageUri) => {
     const blob = await response.blob();
     await uploadBytes(imageRef, blob);
     const downloadURL = await getDownloadURL(imageRef);
+    console.log("Firebase - updateProfile - the downloadURL is: ", downloadURL);
 
-    const firestore = getFirestore();
-    const userDocRef = doc(firestore, "users", userId);
+    // Create a reference to the user document in Firestore
+    const db = getFirestore();
+    const userDocRef = doc(db, "users", userId);
+
     await updateDoc(userDocRef, {
       profileImageUrl: downloadURL,
     });
@@ -617,3 +620,30 @@ export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
 //     console.error("getPostByEmail" + error);
 //   }
 // };
+
+// מחיקת תמונת פרופיל ישנה בעת העלאת תמונה ישנה
+// // Get the current profile image URL
+// const firestore = getFirestore();
+// const userDocRef = doc(firestore, "users", userId);
+// const userDoc = await getDoc(userDocRef);
+// const currentProfileImageUrl = userDoc.data().profileImageUrl;
+
+// // Check if the old profile image exists in Storage
+// if (currentProfileImageUrl) {
+//   const oldImageRef = ref(storage, currentProfileImageUrl);
+//   try {
+//     await getMetadata(oldImageRef);
+//     // If getMetadata succeeds, the image exists, so delete it
+//     await deleteObject(oldImageRef);
+//   } catch (error) {
+//     if (error.code === "storage/object-not-found") {
+//       // If the image doesn't exist, do nothing
+//       console.log(
+//         "Old profile image not found in Storage, skipping deletion"
+//       );
+//     } else {
+//       // If there's another error, throw it
+//       throw error;
+//     }
+//   }
+// }
