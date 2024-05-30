@@ -10,12 +10,7 @@ import AppTextInput from "../AppTextInput";
 import colors from "../../config/colors";
 import CameraButton from "../CameraButton";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-import {
-  getStorage,
-  sRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -48,13 +43,10 @@ function SignUpPage({ navigation }) {
         // if choose image, we uploade to storage
         console.log("Uploading profile image...");
         const storage = getStorage();
-        const timestamp = Date.now(); // Get current timestamp
-        const imageRef = sRef(storage, `profile-images/${timestamp}`);
-        const response = await fetch(selectedImage);
-        const blob = await response.blob();
-        await uploadBytes(imageRef, blob);
-        profileImageUrl = await getDownloadURL(imageRef);
-        console.log ("SignUpPage - the profileimageURL is: ", profileImageUrl);
+        const storageRef = ref(storage, `profile-images/${Date.now()}`);
+        await uploadBytes(storageRef, selectedImage);
+        profileImageUrl = await getDownloadURL(storageRef);
+        console.log("SignUpPage - the profileimageURL is: ", profileImageUrl);
       }
       console.log("Saving user data...");
       await saveUserData(user.uid, email, name, username, profileImageUrl);
@@ -198,3 +190,17 @@ const styles = StyleSheet.create({
   },
 });
 export default SignUpPage;
+
+//מה שניסיתי לעשות
+// if (selectedImage) {
+//   // if choose image, we uploade to storage
+//   console.log("Uploading profile image...");
+//   const storage = getStorage();
+//   const imageRef = ref(storage, "/profile-images/" + Date.now());
+//   const response = await fetch(selectedImage);
+//   console.log("SignUpPage - the response is: ", response);
+//   const blob = await response.blob();
+//   const bytesref = await uploadBytes(imageRef, blob);
+//   const profileImageUrl = await getDownloadURL(bytesref.ref);
+//   console.log("SignUpPage - the profileimageURL is: ", profileImageUrl);
+// }

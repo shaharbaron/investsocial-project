@@ -1,4 +1,9 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import {
   getDocs,
@@ -296,11 +301,11 @@ export const updatePost = async (postId, newCaption, newImage) => {
         const bytesref = await uploadBytes(imagesurl, blob);
         const downloadURL = await getDownloadURL(bytesref.ref);
 
-        // Delete the old image if it exists
-        if (post.imageURL) {
-          const oldImageRef = ref(storage, post.imageURL);
-          await deleteObject(oldImageRef);
-        }
+        // // Delete the old image if it exists
+        // if (post.imageURL) {
+        //   const oldImageRef = ref(storage, post.imageURL);
+        //   await deleteObject(oldImageRef);
+        // }
 
         updatedData.imageURL = downloadURL;
       }
@@ -345,6 +350,9 @@ export const deletePost = async (postTime) => {
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
+// export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
+//   persistence: getReactNativePersistence(AsyncStorage)
+// });
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
 
 // import { getAuth, signInWithEmailAndPassword } from "firebase/auth";

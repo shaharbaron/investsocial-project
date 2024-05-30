@@ -35,7 +35,6 @@ function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
 
@@ -72,7 +71,15 @@ function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
         <Text style={styles.buttontext}>Upload</Text>
       </TouchableOpacity>
       {newImage && (
-        <Image source={{ uri: newImage }} style={{ width: 150, height: 150 }} />
+        <Image
+          source={{ uri: newImage }}
+          style={{
+            marginTop: 10,
+            borderRadius: 10,
+            width: "90%",
+            aspectRatio: 1,
+          }}
+        />
       )}
       <TouchableOpacity
         style={styles.button}

@@ -91,9 +91,13 @@ function Postuser({ email, time, title, image, navigation, onDeletePost }) {
       )}
       <Text style={styles.title}>{title}</Text>
       <Image
-        style={{ width: "100%", aspectRatio: 16 / 9, borderRadius: 10 }}
+        style={{
+          width: "100%",
+          aspectRatio: 7 / 6,
+          resizeMode: "stretch",
+          borderRadius: 10,
+        }}
         source={{ uri: image }}
-        resizeMode="cover"
       />
       <Text style={{ marginTop: 5 }}>{moment(time).fromNow()}</Text>
       {/* <LikeButton /> */}

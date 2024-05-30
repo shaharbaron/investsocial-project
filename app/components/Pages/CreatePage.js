@@ -36,7 +36,7 @@ function CreatePage({ navigation }) {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      // aspect: [16, 9],
+      aspect: [5, 3],
       quality: 1,
     });
 
@@ -83,7 +83,7 @@ function CreatePage({ navigation }) {
             marginTop: 10,
             borderRadius: 10,
             width: "90%",
-            aspectRatio: 16 / 9,
+            aspectRatio: 1,
           }}
           resizeMode="cover"
         />
