@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Postuser from "../components/Postuser";
 import LogoUp from "../components/LogoUp";
+import Stock from "../components/Stock";
 import { getAllPosts } from "../firebase";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -20,7 +21,8 @@ function Home({ navigation }) {
     setRefreshing(true);
     try {
       const postsData = await getAllPosts();
-      setPosts(postsData);
+      const sortedPosts = postsData.sort((a, b) => b.time - a.time);
+      setPosts(sortedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -59,6 +61,7 @@ function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <LogoUp />
+      <Stock />
       {posts.length == 0 ? (
         <Image source={require("../assets/images/loader.gif")}></Image>
       ) : (
@@ -67,7 +70,7 @@ function Home({ navigation }) {
       {posts.length ? (
         <FlatList
           style={{ width: 350 }}
-          data={posts.length ? posts : []}
+          data={posts}
           renderItem={renderPost}
           keyExtractor={(item, index) => index.toString()} // the id of each post
           refreshControl={

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, FlatList, RefreshControl } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  RefreshControl,
+  Alert,
+} from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
 import Postuser from "../components/Postuser";
@@ -35,8 +41,8 @@ function Profile({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (current){
-      handleRefresh();
+      if (current) {
+        handleRefresh();
       }
     }, [current])
   );
@@ -69,14 +75,25 @@ function Profile({ navigation }) {
   }, [current]);
 
   const handleLogout = async () => {
-    try {
-      await AsyncStorage.clear();
-      await auth.signOut();
-      console.log("User logged out successfully");
-      navigation.navigate("Login");
-    } catch (error) {
-      console.error("Error logging out: ", error);
-    }
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      {
+        text: "Cancle",
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          try {
+            await AsyncStorage.clear();
+            await auth.signOut();
+            console.log("User logged out successfully");
+            navigation.navigate("Login");
+          } catch (error) {
+            console.error("Error logging out: ", error);
+          }
+        },
+      },
+    ]);
   };
 
   return (

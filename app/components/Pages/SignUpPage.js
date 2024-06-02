@@ -43,9 +43,11 @@ function SignUpPage({ navigation }) {
         // if choose image, we uploade to storage
         console.log("Uploading profile image...");
         const storage = getStorage();
-        const storageRef = ref(storage, `profile-images/${Date.now()}`);
-        await uploadBytes(storageRef, selectedImage);
-        profileImageUrl = await getDownloadURL(storageRef);
+        const storageRef = ref(storage, `profile-images/${Date.now()}`); //הפניה למיקום ספציפי
+        const response = await fetch(selectedImage); //הפונקציה fetch מחזירה promise שמכיל אובייקט response מהשרת
+        const blob = await response.blob(); //ממיר את התמונה לאובייקט מסוג blob
+        await uploadBytes(storageRef, blob); // מעלים את הblob שנבחר למיקום שהוגדר
+        profileImageUrl = await getDownloadURL(storageRef); // מקבלים את כתובת הurl הציבורית של הקובץ שהועלה
         console.log("SignUpPage - the profileimageURL is: ", profileImageUrl);
       }
       console.log("Saving user data...");
