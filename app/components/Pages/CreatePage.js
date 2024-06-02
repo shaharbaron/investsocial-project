@@ -17,7 +17,6 @@ import { getAuth } from "firebase/auth";
 function CreatePage({ navigation }) {
   const auth = getAuth();
   const current = auth.currentUser;
-  //console.log ("Create - the current user is:" , current); // this 3 lines is to know who is the current
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false); //

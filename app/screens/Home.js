@@ -62,7 +62,7 @@ function Home({ navigation }) {
     <View style={styles.container}>
       <LogoUp />
       <Stock />
-      {posts.length == 0 ? (
+      {posts.length === 0 ? (
         <Image source={require("../assets/images/loader.gif")}></Image>
       ) : (
         false

@@ -192,17 +192,3 @@ const styles = StyleSheet.create({
   },
 });
 export default SignUpPage;
-
-//מה שניסיתי לעשות
-// if (selectedImage) {
-//   // if choose image, we uploade to storage
-//   console.log("Uploading profile image...");
-//   const storage = getStorage();
-//   const imageRef = ref(storage, "/profile-images/" + Date.now());
-//   const response = await fetch(selectedImage);
-//   console.log("SignUpPage - the response is: ", response);
-//   const blob = await response.blob();
-//   const bytesref = await uploadBytes(imageRef, blob);
-//   const profileImageUrl = await getDownloadURL(bytesref.ref);
-//   console.log("SignUpPage - the profileimageURL is: ", profileImageUrl);
-// }

@@ -29,7 +29,8 @@ function Profile({ navigation }) {
     try {
       if (current) {
         const posts = await getPostsByEmail(current.email);
-        if (posts.length > 0) {
+        const sortedPosts = posts.sort((a, b) => b.time - a.time);
+        if (sortedPosts.length > 0) {
           setPosts([...posts]);
         }
       }

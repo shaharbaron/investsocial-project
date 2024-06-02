@@ -27,7 +27,7 @@ const Stock = () => {
     };
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 5000); // Refresh prices every 5 seconds
+    const interval = setInterval(fetchPrices, 5000); // every 5 seconds the interval take from the api the info by axios
 
     return () => {
       clearInterval(interval);

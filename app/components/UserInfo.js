@@ -3,11 +3,7 @@ import { StyleSheet, View, Image, Text } from "react-native";
 
 function UserInfo({ imagepro, username, time, navigation }) {
   // profile picture, username , time of the post
-  useEffect(() => {
-    // console.log("Userinfo - imagepro", imagepro);
-    // console.log("Userinfo - username", username);
-    // console.log("Userinfo - time", time);
-  }, [imagepro]);
+  useEffect(() => {}, [imagepro]);
 
   return (
     <View style={{ flexDirection: "row" }}>
