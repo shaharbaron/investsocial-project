@@ -31,7 +31,10 @@ function SettingPro(props) {
     const profileImageURL = await getCurrentUserProfileImage();
     if (profileImageURL) {
       setProfilepic(profileImageURL);
-      console.log("Current user's profile image URL:", profileImageURL);
+      console.log(
+        "SettingPro - Current user's profile image URL:",
+        profileImageURL
+      );
     } else {
       console.log("No profile image found for the current user");
     }

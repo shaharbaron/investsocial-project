@@ -40,8 +40,11 @@ function CreatePage({ navigation }) {
     });
 
     if (!result.canceled) {
-      //console.log("Create -  the result.uri is: ", result.uri);
-      setImage(result.uri);
+      console.log(
+        "Create - the result.assets[0].uri is: ",
+        result.assets[0].uri
+      );
+      setImage(result.assets[0].uri);
     }
   };
 

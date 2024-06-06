@@ -22,6 +22,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFromCache, saveToCache, clearCache } from "./cache";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDFgBraP1poMH5hMAupic9dJ344GcVzlfk",
@@ -70,14 +71,19 @@ export const getPostsByEmail = async (email) => {
 };
 
 export const submitNewPost = async (email, caption, image) => {
-  console.log("Firebase - in sumbitnewpost the image is", image);
+  console.log(
+    "Firebase - submitNewPost - in sumbitnewpost the image is",
+    image
+  );
   try {
     const storage = getStorage();
     const imagesurl = sRef(storage, "/posts-images/" + Date.now());
     const response = await fetch(image);
     const blob = await response.blob();
-    const bytesref = await uploadBytes(imagesurl, blob);
-    const downloadURL = await getDownloadURL(bytesref.ref);
+    console.log("firebase - sumbitNewPost - the image URL is: ", imagesurl);
+    await uploadBytes(imagesurl, blob);
+
+    const downloadURL = await getDownloadURL(imagesurl);
 
     const newPost = {
       email: email,
@@ -108,13 +114,13 @@ export const getUserByEmail = async (email) => {
 
 export const getEmailByUsername = async (username) => {
   try {
-    // console.log("Firebase - getEmailByUser is :", username);
+    //console.log("Firebase - getEmailByUsername is :", username);
     const usersCollection = collection(FIRESTORE_DB, "users");
     const q = query(usersCollection, where("username", "==", username));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       const user = querySnapshot.docs[0].data();
-      // console.log("Firebase - getEmailByUser the email is :", user.email);
+      // console.log("Firebase - getEmailByUsername the email is :", user.email);
       return user.email;
     } else {
       return null;
@@ -128,8 +134,16 @@ export const getEmailByUsername = async (username) => {
 export const getCurrentUserProfileImage = async () => {
   const auth = getAuth();
   const user = auth.currentUser;
-  // console.log("firebase - getpropic - the user is: ", user);
+
   if (user) {
+    const cacheKey = `userProfileImage_${user.uid}`;
+    const cachedImageUrl = await getFromCache(cacheKey);
+    if (cachedImageUrl) {
+      console.log(
+        "Firebase - getCurrentUserProfileImage - Profile image retrieved from cache"
+      );
+      return cachedImageUrl;
+    }
     try {
       const firestore = getFirestore();
       const userDocRef = doc(firestore, "users", user.uid);
@@ -138,11 +152,18 @@ export const getCurrentUserProfileImage = async () => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         console.log(
-          "firebase - getcurrentprofile - the userdata is :",
+          "firebase - getCurrentUserProfileImage - the userdata is :",
           userData
         );
         const profileImageUrl = userData.profileImageUrl;
-        console.log("firebase - the profileImageUrl is:", profileImageUrl);
+        console.log(
+          "firebase - getCurrentUserProfileImage - the profileImageUrl is:",
+          profileImageUrl
+        );
+        await saveToCache(cacheKey, profileImageUrl);
+        console.log(
+          "Profile image retrieved from Firestore and saved to cache"
+        );
         return profileImageUrl;
       } else {
         console.log("User document does not exist");
@@ -212,6 +233,10 @@ export const updateProfileImage = async (userId, imageUri) => {
       profileImageUrl: downloadURL,
     });
 
+    const cacheKey = `userProfileImage_${userId}`;
+    await clearCache(cacheKey);
+    console.log("Profile image updated and cache cleared");
+
     return downloadURL;
   } catch (error) {
     console.error("Error updating profile image:", error);
@@ -243,7 +268,7 @@ export const updateUsername = async (userId, newUsername) => {
         return false;
       }
     } else {
-      console.log("User document does not exist");
+      console.log("firebase - updateUsername - User document does not exist");
       return false;
     }
   } catch (error) {
@@ -273,10 +298,12 @@ export const updatePost = async (postId, newCaption, newImage) => {
     const firestore = getFirestore();
     const post = await getPostByTime(postId);
     console.log("Firebase - updatePost - the  post is: ", post);
+    console.log("firebase - updatePost - the postId is: ", postId);
+    console.log("firebase - updatePost - the newCaption is: ", newCaption);
+    console.log("firebase - updatePost - the newImage is: ", newImage);
 
     if (post) {
       const postDocRef = doc(firestore, "Posts", post.id);
-
       let updatedData = {};
 
       if (newCaption) {
@@ -289,14 +316,8 @@ export const updatePost = async (postId, newCaption, newImage) => {
         const imagesurl = sRef(storage, "/posts-images/" + post.id);
         const response = await fetch(newImage);
         const blob = await response.blob();
-        const bytesref = await uploadBytes(imagesurl, blob);
-        const downloadURL = await getDownloadURL(bytesref.ref);
-
-        // // Delete the old image if it exists
-        // if (post.imageURL) {
-        //   const oldImageRef = ref(storage, post.imageURL);
-        //   await deleteObject(oldImageRef);
-        // }
+        await uploadBytes(imagesurl, blob);
+        const downloadURL = await getDownloadURL(imagesurl);
 
         updatedData.imageURL = downloadURL;
       }
@@ -308,6 +329,7 @@ export const updatePost = async (postId, newCaption, newImage) => {
     }
   } catch (error) {
     console.error("Error updating post:", error);
+    throw error;
   }
 };
 

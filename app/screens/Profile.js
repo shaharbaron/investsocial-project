@@ -5,6 +5,7 @@ import {
   FlatList,
   RefreshControl,
   Alert,
+  Image,
 } from "react-native";
 import LogoUp from "../components/LogoUp";
 import { Feather } from "@expo/vector-icons";
@@ -116,6 +117,11 @@ function Profile({ navigation }) {
         />
       </View>
       <ProfileInfo />
+      {posts.length === 0 ? (
+        <Image source={require("../assets/images/loader.gif")}></Image>
+      ) : (
+        false
+      )}
       {posts.length ? (
         <FlatList
           style={{ width: 350 }}

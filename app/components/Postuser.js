@@ -5,17 +5,12 @@ import { getUserByEmail, deletePost } from "../firebase";
 import { getAuth } from "firebase/auth";
 import colors from "../config/colors";
 import UserInfo from "./UserInfo";
-import LikeButton from "./Icons/LikeButton";
 import Feather from "@expo/vector-icons/Feather";
 import { AntDesign } from "@expo/vector-icons";
 
 moment.locale("en");
 
 function Postuser({ email, time, title, image, navigation, onDeletePost }) {
-  // console.log("Postuser - the image is: ", image);
-  // console.log("Postuser - the title is: ", title);
-  // console.log("Postuser - the email is: ", email);
-
   const [userDetails, setUserDetails] = useState([]);
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -100,7 +95,6 @@ function Postuser({ email, time, title, image, navigation, onDeletePost }) {
         source={{ uri: image }}
       />
       <Text style={{ marginTop: 5 }}>{moment(time).fromNow()}</Text>
-      {/* <LikeButton /> */}
     </View>
   );
 }

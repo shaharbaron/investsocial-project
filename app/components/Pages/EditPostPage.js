@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -39,8 +39,11 @@ function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
     });
 
     if (!result.canceled) {
-      //console.log("Create -  the result.uri is: ", result.uri);
-      setnewImage(result.uri);
+      console.log(
+        "EditPostPage - the result.assets[0].uri is: ",
+        result.assets[0].uri
+      );
+      setnewImage(result.assets[0].uri);
     }
   };
 
@@ -50,11 +53,14 @@ function EditPostPage({ postId, initialTitle, initialImage, navigation }) {
       alert("Please enter a caption before posting.");
       return;
     }
+    console.log("1");
     setIsSubmitting(true);
+    console.log("EditPostPage2 - the newImage is: ", newImage);
     updatePost(postId, newCaption, newImage);
     setIsSubmitting(false);
-    navigation.navigate("Home"); // Navigate back to the Home screen
+    navigation.goBack(); // Navigate back to the Home screen
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Update your post</Text>

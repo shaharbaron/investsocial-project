@@ -19,9 +19,10 @@
     "apisauce": "^3.0.1",
     "axios": "^1.6.8",
     "body-parser": "^1.20.2",
-    "expo": "^51.0.0",
-    "expo-image-picker": "~14.3.2",
-    "expo-status-bar": "~1.11.1",
+    "expo": "~51.0.10",
+    "expo-image-picker": "~15.0.5",
+    "expo-permissions": "^14.4.0",
+    "expo-status-bar": "~1.12.1",
     "express": "^4.19.2",
     "firebase": "^10.11.1",
     "moment": "^2.30.1",
@@ -34,13 +35,13 @@
     "react-native-fbsdk": "^3.0.0",
     "react-native-gesture-handler": "^2.16.1",
     "react-native-sqlite-storage": "^6.0.1",
-    "react-native-vector-icons": "^10.1.0",
-    "typescript": "^5.1.3"
+    "react-native-vector-icons": "^10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/plugin-transform-private-methods": "^7.24.1",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "typescript": "~5.3.3"
   },
   "private": true
 }

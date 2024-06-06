@@ -5,6 +5,7 @@ import {
   View,
   Platform,
   FlatList,
+  Alert,
 } from "react-native";
 import LogoUp from "../components/LogoUp";
 import AppTextInput from "../components/AppTextInput";
@@ -29,6 +30,7 @@ function Explore(props) {
       const searchResults = await getPostsByEmail(email.toLowerCase());
       setPosts(searchResults);
     } else {
+      Alert.alert("User not Found");
       setPosts([]);
     }
   };

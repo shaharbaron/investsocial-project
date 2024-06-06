@@ -36,8 +36,8 @@ const Stock = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.stockText}>SPY: {spyPrice} </Text>
-      <Text style={styles.stockText}> QQQ: {qqqPrice}</Text>
+      <Text style={styles.stockText}>SPY: {spyPrice}$ </Text>
+      <Text style={styles.stockText}> QQQ: {qqqPrice}$</Text>
     </View>
   );
 };
